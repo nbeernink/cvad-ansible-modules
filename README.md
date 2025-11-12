@@ -16,8 +16,10 @@ orchestrate things in a certain order, which is where hopefully this collection
 can fill a gap.
 
 ### Modules included
-Currently only `machine_info` is included and serves as a template for future
-modules.
+
+* `machine_info` - returns info for a given machine
+* `machine_maintenancemode` - allows turning on/off maintenance mode for
+  a machine
 
 # Installation
 You can install the collection from [Ansible
@@ -26,7 +28,7 @@ collection install nbeernink.cvad`.
 
 ### TODO
 * Add additional modules to allow:
-  - Turning maintenance mode on/off for a machine
+  - ~~Turning maintenance mode on/off for a machine~~
   - Assigning/removing users for a given machine
   - Controlling a machine's power state (if available)
   - Creating new Delivery & Machine catalogs
