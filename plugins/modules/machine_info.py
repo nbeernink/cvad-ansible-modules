@@ -50,8 +50,6 @@ def run_module():
         )
     )
 
-    result = dict(changed=False, message='')
-
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True
@@ -66,9 +64,8 @@ def run_module():
         machine_id=cvad_client.find_machine_id(machine_name)
 
         machine_info=cvad_client.get(f"/Machines/{machine_id}")
-        result['machine_info'] = machine_info
 
-        module.exit_json(**result)
+        module.exit_json(changed=False,machine_info=machine_info)
 
     except AssertionError as error:
         module.fail_json(msg=str(error))
