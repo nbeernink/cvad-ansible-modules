@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Provides a client to interact with the Citrix Virtual Apps and Desktops REST API
 https://developer-docs.citrix.com/en-us/citrix-virtual-apps-desktops/citrix-cvad-rest-apis/overview
