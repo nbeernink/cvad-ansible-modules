@@ -18,6 +18,9 @@ can fill a gap.
 ### Modules included
 
 * `machine_info` - returns info for a given machine
+* `delivery_group_info` - returns info for a delivery group
+* `delivery_group_machines` - assigns/removes machines in a delivery group
+* `machine_catalog_info` - returns info for a machine catalog
 * `machine_maintenancemode` - allows turning on/off maintenance mode for
   a machine
 
@@ -33,7 +36,7 @@ collection install nbeernink.cvad`.
   - Controlling a machine's power state (if available)
   - Creating new Delivery & Machine catalogs
   - Adding machines to a specific machine catalog
-  - Adding machines to a specific delivery catalog
+  - ~~Adding machines to a specific delivery catalog~~
   - Your great idea here?
 * Set up automated linting/ansible-testing
 * Since Citrix publishes an [OpenAPI specification](https://developer-docs.citrix.com/en-us/citrix-virtual-apps-desktops/citrix-cvad-rest-apis/apis/citrix-cvad-rest-apis.json), hopefully this collection can be tested against a mock API provided via [prism](https://github.com/stoplightio/prism)
