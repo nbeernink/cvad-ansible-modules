@@ -1,0 +1,28 @@
+name: CI
+on:
+  # Run CI against all pushes (direct commits, also merged PRs), Pull Requests
+  push:
+    branches:
+      - main
+  pull_request:
+
+  schedule:
+    - cron: '12 7 * * *'
+jobs:
+  sanity:
+    name: Sanity (Ⓐ${{ matrix.ansible }})
+    strategy:
+      matrix:
+        ansible:
+          - stable-2.16
+          - stable-2.18
+          - milestone
+    runs-on: ubuntu-latest
+    steps:
+        - name: Perform sanity testing
+          # See the documentation for the following GitHub action on
+          # https://github.com/ansible-community/ansible-test-gh-action/blob/main/README.md
+          uses: ansible-community/ansible-test-gh-action@release/v1
+          with:
+            ansible-core-version: ${{ matrix.ansible }}
+            testing-type: sanity
