@@ -2,12 +2,11 @@
 namespace: nbeernink
 name: cvad
 description: Collection of modules for interacting with the Citrix Virtual Apps and Desktop API
-version: 0.0.2
+version: 0.0.3
 readme: README.md
 
 authors:
  - Niek Beernink
-
 
 repository: https://github.com/nbeernink/cvad-ansible-modules
 
