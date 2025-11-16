@@ -61,8 +61,11 @@ def run_module():
         cvad_client=CVADClient(**module.params)
         cvad_client.login()
 
-        machine_info=cvad_client.get(f"/Machines/{module.params['machine_name']}")
+        machine_name=module.params['machine_name']
 
+        machine_id=cvad_client.find_machine_id(machine_name)
+
+        machine_info=cvad_client.get(f"/Machines/{machine_id}")
         result['machine_info'] = machine_info
 
         module.exit_json(**result)

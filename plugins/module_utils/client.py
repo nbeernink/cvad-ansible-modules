@@ -125,6 +125,83 @@ class CVADClient():
         except AssertionError as http_error:
             raise AssertionError(f"Request failed ({method} {url}): {http_error}") from http_error
 
+    # Search functions
+    def _find_entity_field_by_name(self, endpoint: str, name: str, fields:str) -> str:
+        """
+        Generic method to search an endpoint and return its field
+
+        Args:
+            endpoint: The REST endpoint to search
+            name: name of the item to search for
+            fields: fields to return, if empty, returns all fields
+
+        Returns:
+            dict or str: The value of the requested field.
+
+        Raises:
+            IndexError: If no item is found
+            KeyError: If the specified field is missing.
+        """
+
+        results = self.post(
+            f"{endpoint}/$search?fields={fields}",
+            data={'BasicSearchString': name }
+        )
+
+        items = results.get('Items')
+
+        if not items:
+            raise IndexError(f"No item found for search '{name}' at endpoint '{endpoint}'")
+
+        first_item = items[0]
+
+        value = first_item.get(fields, None)
+
+        if value is None:
+            raise KeyError(f"API response missing expected field '{fields}'")
+
+        return value
+
+
+    def find_delivery_group_by_id(self, group_name) -> str:
+        """Search delivery group and return the id"""
+        return self._find_entity_field_by_name(
+            endpoint="/DeliveryGroups",
+            name=group_name,
+            fields="Id"
+        )
+
+    def find_machine_catalog_by_id(self, catalog_name) -> str:
+        """Search delivery group and return the id"""
+        return self._find_entity_field_by_name(
+            endpoint="/MachineCatalogs",
+            name=catalog_name,
+            fields="Id"
+        )
+
+    def find_machine_id(self, machine_name) -> str:
+        """Search machine and return its ID"""
+        return self._find_entity_field_by_name(
+            endpoint="/Machines",
+            name=machine_name,
+            fields="Id"
+        )
+
+    def find_machine_catalog_id_for_machine(self, machine_name) -> str:
+        """Search machine and return the machine catalog ID"""
+        results = self._find_entity_field_by_name(
+            endpoint="/Machines",
+            name=machine_name,
+            fields="MachineCatalog"
+        )
+
+        # Handles the nested dictionary lookup
+        catalog_id = results.get('Id', None)
+
+        if catalog_id is None:
+            raise KeyError("The 'MachineCatalog' object did not contain an 'Id' key.")
+
+        return str(catalog_id)
 
     # CRUD operations
     def get(self, endpoint):
