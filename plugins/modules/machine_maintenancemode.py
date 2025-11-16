@@ -47,7 +47,7 @@ machine_status:
     }
 """
 
-from ansible.module_utils.basic import AnsibleModule, env_fallback
+from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.nbeernink.cvad.plugins.module_utils.client import CVADClient
 from ansible_collections.nbeernink.cvad.plugins.module_utils.base_argument_spec import base_argument_spec
 
