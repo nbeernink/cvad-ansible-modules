@@ -39,35 +39,14 @@ machine_info:
 
 from ansible.module_utils.basic import AnsibleModule, env_fallback
 from ..module_utils.client import CVADClient
+from ansible_modules.nbeernink.cvad.plugins.module_utils.base_argument_spec import base_argument_spec
 
 def run_module():
-    module_args = dict(
-        ddc_server=dict(
-            type='str',
-            required=True,
-            fallback=(env_fallback, ["CVAD_DDC_SERVER"]),
-        ),
-        username=dict(
-            type='str',
-            required=True,
-            fallback=(env_fallback, ["CVAD_USERNAME"]),
-        ),
-        password=dict(
-            type='str',
-            required=True,
-            fallback=(env_fallback, ["CVAD_PASSWORD"]),
-            no_log=True
-        ),
-        validate_certs=dict(
-            type='bool',
-            required=False,
-            default=True,
-            fallback=(env_fallback, ["CVAD_VALIDATE_CERTS"]),
-        ),
+    module_args = base_argument_spec()
+    module_args.update(
         machine_name=dict(
             type='str',
             required=True,
-            fallback=(env_fallback, ["CVAD_MACHINE_NAME"]),
         )
     )
 
