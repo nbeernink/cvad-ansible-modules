@@ -41,6 +41,7 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_modules.nbeernink.cvad.plugins.module_utils.client import CVADClient
 from ansible_modules.nbeernink.cvad.plugins.module_utils.base_argument_spec import base_argument_spec
 
+
 def run_module():
     module_args = base_argument_spec()
     module_args.update(
@@ -56,19 +57,20 @@ def run_module():
     )
 
     try:
-        cvad_client=CVADClient(**module.params)
+        cvad_client = CVADClient(**module.params)
         cvad_client.login()
 
-        machine_name=module.params['machine_name']
+        machine_name = module.params['machine_name']
 
-        machine_id=cvad_client.find_machine_id(machine_name)
+        machine_id = cvad_client.find_machine_id(machine_name)
 
-        machine_info=cvad_client.get(f"/Machines/{machine_id}")
+        machine_info = cvad_client.get(f"/Machines/{machine_id}")
 
-        module.exit_json(changed=False,machine_info=machine_info)
+        module.exit_json(changed=False, machine_info=machine_info)
 
     except AssertionError as error:
         module.fail_json(msg=str(error))
+
 
 if __name__ == '__main__':
     run_module()

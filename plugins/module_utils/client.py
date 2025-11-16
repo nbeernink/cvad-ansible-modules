@@ -6,6 +6,7 @@ https://developer-docs.citrix.com/en-us/citrix-virtual-apps-desktops/citrix-cvad
 import json
 from ansible.module_utils.urls import Request
 
+
 class CVADClient():
     """Initialize the CVADClient"""
     def __init__(
@@ -14,23 +15,22 @@ class CVADClient():
             password,
             ddc_server,
             validate_certs,
-            **kwargs # pylint: disable=unused-argument
+            **kwargs  # pylint: disable=unused-argument
     ):
         self.username = username
         self.password = password
         self.ddc_server = ddc_server
         self.validate_certs = validate_certs
 
-
         self.base_url = f'https://{self.ddc_server}/cvad/manage'
-        self.request = Request(validate_certs = validate_certs)
+        self.request = Request(validate_certs=validate_certs)
         self.cvad_header = None
 
     def _get_bearer_token(self) -> str:
         """ Return a bearer token using basic authentication """
 
         response = self.request.post(
-            url = self.base_url + '/Tokens',
+            url=self.base_url + '/Tokens',
             url_username=self.username,
             url_password=self.password,
             force_basic_auth=True,
@@ -40,12 +40,12 @@ class CVADClient():
 
         return token_data['Token']
 
-    def _get_site_id(self,bearer_token) -> dict:
+    def _get_site_id(self, bearer_token) -> dict:
         """ Get and validate the list of available sites """
 
         req_sites = self.request.get(
-            url = self.base_url + '/Me',
-            headers = {
+            url=self.base_url + '/Me',
+            headers={
                 'Authorization': f'CWSAuth Bearer={bearer_token}'
             }
         ).read()
@@ -55,18 +55,18 @@ class CVADClient():
         # FIXME: This can probably be done fancier
         #
         # Example output:
-        #"Customers": [
-        #    {
-        #        "Id": "CitrixOnPremises",
-        #        "Name": "None",
-        #        "Sites": [
-        #            {
-        #                "Id": "<site-id>",
-        #                "Name": "<site-name>"
-        #            }
-        #        ]
-        #    }
-        #]
+        # "Customers": [
+        #     {
+        #         "Id": "CitrixOnPremises",
+        #         "Name": "None",
+        #         "Sites": [
+        #             {
+        #                 "Id": "<site-id>",
+        #                 "Name": "<site-name>"
+        #             }
+        #         ]
+        #     }
+        # ]
         #
         #
         # Exactly 1 customer
@@ -79,7 +79,6 @@ class CVADClient():
                 raise AssertionError("Exactly 1 site is supported")
             raise AssertionError("Only CitrixOnPremises is supported")
         raise AssertionError("Exactly 1 customer is supported")
-
 
     def login(self) -> None:
         """
@@ -110,7 +109,7 @@ class CVADClient():
         payload = json.dumps(data) if data else None
 
         try:
-            response  = self.request.open(
+            response = self.request.open(
                 method=method,
                 url=url,
                 data=payload,
@@ -126,7 +125,7 @@ class CVADClient():
             raise AssertionError(f"Request failed ({method} {url}): {http_error}") from http_error
 
     # Search functions
-    def _find_entity_field_by_name(self, endpoint: str, name: str, fields:str) -> str:
+    def _find_entity_field_by_name(self, endpoint: str, name: str, fields: str) -> str:
         """
         Generic method to search an endpoint and return its field
 
@@ -145,7 +144,7 @@ class CVADClient():
 
         results = self.post(
             f"{endpoint}/$search?fields={fields}",
-            data={'BasicSearchString': name }
+            data={'BasicSearchString': name}
         )
 
         items = results.get('Items')
@@ -161,7 +160,6 @@ class CVADClient():
             raise KeyError(f"API response missing expected field '{fields}'")
 
         return value
-
 
     def find_delivery_group_by_id(self, group_name) -> str:
         """Search delivery group and return the id"""

@@ -52,6 +52,7 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.nbeernink.cvad.plugins.module_utils.client import CVADClient
 from ansible_collections.nbeernink.cvad.plugins.module_utils.base_argument_spec import base_argument_spec
 
+
 def run_module():
     module_args = base_argument_spec()
 
@@ -70,7 +71,7 @@ def run_module():
     )
 
     try:
-        cvad_client=CVADClient(**module.params)
+        cvad_client = CVADClient(**module.params)
         cvad_client.login()
 
         group_name = module.params['delivery_group']
@@ -84,18 +85,19 @@ def run_module():
             return_fields = delimiter.join(module.params['fields'])
 
         if group_name:
-            delivery_group_info=cvad_client.get(
+            delivery_group_info = cvad_client.get(
                 f"/DeliveryGroups/{group_id}?fields={return_fields}"
             )
         else:
-            delivery_group_info=cvad_client.get(
+            delivery_group_info = cvad_client.get(
                 f"/DeliveryGroups?fields={return_fields}"
             )['Items']
 
-        module.exit_json(changed=False,delivery_group_info=delivery_group_info)
+        module.exit_json(changed=False, delivery_group_info=delivery_group_info)
 
     except AssertionError as error:
         module.fail_json(msg=str(error))
+
 
 if __name__ == '__main__':
     run_module()

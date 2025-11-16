@@ -3,6 +3,7 @@ Base argument spec
 """
 from ansible.module_utils.basic import env_fallback
 
+
 def base_argument_spec():
     """
     Returns a dictionary with common options for all CVAD module specs.
