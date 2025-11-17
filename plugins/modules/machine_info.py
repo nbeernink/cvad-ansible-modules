@@ -56,8 +56,8 @@ machine_info:
 """
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_modules.nbeernink.cvad.plugins.module_utils.client import CVADClient
-from ansible_modules.nbeernink.cvad.plugins.module_utils.base_argument_spec import base_argument_spec
+from ansible_collections.nbeernink.cvad.plugins.module_utils.client import CVADClient
+from ansible_collections.nbeernink.cvad.plugins.module_utils.base_argument_spec import base_argument_spec
 
 
 def run_module():
