@@ -36,6 +36,7 @@ options:
     description:
       - A list of fields to return. If not specified returns all fields
     type: list
+    elements: str
 """
 
 EXAMPLES = r"""
@@ -79,6 +80,7 @@ def run_module():
         ),
         fields=dict(
             type='list',
+            elements='str'
         )
     )
 

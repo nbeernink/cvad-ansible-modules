@@ -41,7 +41,6 @@ options:
       - If set to 'off' and machine is not in maintenance mode, then no action is taken.
     choices: [ 'on', 'off' ]
     default: 'off'
-    required: true
     type: str
 """
 

@@ -36,6 +36,7 @@ options:
     description:
       - A list of fields to return. If not specified, returns all fields
     type: list
+    elements: str
 """
 
 EXAMPLES = r"""
@@ -62,7 +63,7 @@ RETURN = r"""
 delivery_groups:
   description: requested delivery group info
   returned: success
-  type: list or dict
+  type: list
   elements: dict
 """
 
@@ -80,6 +81,7 @@ def run_module():
         ),
         fields=dict(
             type='list',
+            elements='str'
         )
     )
 

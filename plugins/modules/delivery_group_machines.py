@@ -42,6 +42,8 @@ options:
       - V(present) will add a machine from the given delivery group
       - V(absent) will remove a machine from the given delivery group
     choices: ['absent','present']
+    type: str
+    required: true
 """
 
 EXAMPLES = r"""
