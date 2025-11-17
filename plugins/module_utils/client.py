@@ -2,6 +2,10 @@
 Provides a client to interact with the Citrix Virtual Apps and Desktops REST API
 https://developer-docs.citrix.com/en-us/citrix-virtual-apps-desktops/citrix-cvad-rest-apis/overview
 """
+
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 import json
 from ansible.module_utils.urls import Request
 
