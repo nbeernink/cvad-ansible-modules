@@ -1,5 +1,26 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+#
+# nbeernink.cvad
+# Copyright (C) 2025  Niek Beernink
+#
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 DOCUMENTATION = r"""
 ---
 module: machine_catalog_info
@@ -18,6 +39,7 @@ options:
     description:
       - A list of fields to return. If not specified returns all fields
     type: list
+    elements: str
 """
 
 EXAMPLES = r"""
@@ -52,6 +74,7 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.nbeernink.cvad.plugins.module_utils.client import CVADClient
 from ansible_collections.nbeernink.cvad.plugins.module_utils.base_argument_spec import base_argument_spec
 
+
 def run_module():
     module_args = base_argument_spec()
     module_args.update(
@@ -60,6 +83,7 @@ def run_module():
         ),
         fields=dict(
             type='list',
+            elements='str'
         )
     )
 
@@ -69,7 +93,7 @@ def run_module():
     )
 
     try:
-        cvad_client=CVADClient(**module.params)
+        cvad_client = CVADClient(**module.params)
         cvad_client.login()
 
         catalog_name = module.params['machine_catalog']
@@ -82,18 +106,19 @@ def run_module():
             return_fields = delimiter.join(module.params['fields'])
 
         if catalog_name:
-            machine_catalog_info=cvad_client.get(
+            machine_catalog_info = cvad_client.get(
                 f"/MachineCatalogs/{catalog_id}?fields={return_fields}"
             )
         else:
-            machine_catalog_info=cvad_client.get(
+            machine_catalog_info = cvad_client.get(
                 f"/MachineCatalogs?fields={return_fields}"
             )['Items']
 
-        module.exit_json(changed=False,machine_catalog_info=machine_catalog_info)
+        module.exit_json(changed=False, machine_catalog_info=machine_catalog_info)
 
     except AssertionError as error:
         module.fail_json(msg=str(error))
+
 
 if __name__ == '__main__':
     run_module()

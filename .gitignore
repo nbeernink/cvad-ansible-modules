@@ -23,3 +23,6 @@ venv.bak/
 
 # collections
 *.tar.gz
+
+#changelogs
+changelogs/.plugin-cache.yaml

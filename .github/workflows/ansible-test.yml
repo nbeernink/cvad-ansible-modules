@@ -20,10 +20,10 @@ jobs:
           - milestone
     runs-on: ubuntu-latest
     steps:
-        - name: Perform sanity testing
-          # See the documentation for the following GitHub action on
-          # https://github.com/ansible-community/ansible-test-gh-action/blob/main/README.md
-          uses: ansible-community/ansible-test-gh-action@release/v1
-          with:
-            ansible-core-version: ${{ matrix.ansible }}
-            testing-type: sanity
+      - name: Perform sanity testing
+        # See the documentation for the following GitHub action on
+        # https://github.com/ansible-community/ansible-test-gh-action/blob/main/README.md
+        uses: ansible-community/ansible-test-gh-action@release/v1
+        with:
+          ansible-core-version: ${{ matrix.ansible }}
+          testing-type: sanity

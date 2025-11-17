@@ -15,12 +15,12 @@ provider](https://github.com/citrix/terraform-provider-citrix), however that doe
 orchestrate things in a certain order, which is where hopefully this collection
 can fill a gap.
 
-### Modules included
+### Ansible modules included
 
-* `machine_info` - returns info for a given machine
 * `delivery_group_info` - returns info for a delivery group
 * `delivery_group_machines` - assigns/removes machines in a delivery group
 * `machine_catalog_info` - returns info for a machine catalog
+* `machine_info` - returns info for a given machine
 * `machine_maintenancemode` - allows turning on/off maintenance mode for
   a machine
 

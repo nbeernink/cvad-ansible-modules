@@ -1,5 +1,26 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+#
+# nbeernink.cvad
+# Copyright (C) 2025  Niek Beernink
+#
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 DOCUMENTATION = r"""
 ---
 module: delivery_group_machines
@@ -24,6 +45,8 @@ options:
       - V(present) will add a machine from the given delivery group
       - V(absent) will remove a machine from the given delivery group
     choices: ['absent','present']
+    type: str
+    required: true
 """
 
 EXAMPLES = r"""
@@ -57,6 +80,7 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.nbeernink.cvad.plugins.module_utils.client import CVADClient
 from ansible_collections.nbeernink.cvad.plugins.module_utils.base_argument_spec import base_argument_spec
 
+
 def run_module():
     module_args = base_argument_spec()
 
@@ -72,7 +96,7 @@ def run_module():
         state=dict(
             type='str',
             required=True,
-            choices = ['absent','present']
+            choices=['absent', 'present']
         )
     )
 
@@ -82,7 +106,7 @@ def run_module():
     )
 
     try:
-        cvad_client=CVADClient(**module.params)
+        cvad_client = CVADClient(**module.params)
         cvad_client.login()
 
         # variable re-assignment
@@ -98,10 +122,10 @@ def run_module():
         machine_catalog_id = cvad_client.find_machine_catalog_id_for_machine(machine_name)
 
         # Get list of machines in delivery group
-        machines=cvad_client.get(f"/DeliveryGroups/{group_name}/Machines")['Items']
+        machines = cvad_client.get(f"/DeliveryGroups/{group_name}/Machines")['Items']
 
         # Check if machine is already in catalog
-        machine_in_catalog=any(
+        machine_in_catalog = any(
             machine['DnsName'] == machine_name for machine in machines
         )
 
@@ -111,10 +135,10 @@ def run_module():
                     f"/DeliveryGroups/{delivery_group_id}/Machines/{machine_id}"
                 )
                 msg = f"Removed {machine_name} from {group_name}"
-                changed=True
+                changed = True
             else:
                 msg = f"Would remove {machine_name} from {group_name}"
-                changed=True
+                changed = True
 
         elif state == 'present' and not machine_in_catalog:
             if not module.check_mode:
@@ -128,19 +152,20 @@ def run_module():
                     }
                 )
                 msg = f"Added {machine_name} to {group_name}"
-                changed=True
+                changed = True
             else:
                 msg = f"Would add {machine_name} to {group_name}"
-                changed=True
+                changed = True
 
         else:
             msg = f"Machine '{machine_name}' is already {state} in delivery-group '{group_name}'"
-            changed=False
+            changed = False
 
-        module.exit_json(changed=changed,msg=msg)
+        module.exit_json(changed=changed, msg=msg)
 
     except AssertionError as error:
         module.fail_json(msg=str(error))
+
 
 if __name__ == '__main__':
     run_module()
