@@ -1,5 +1,8 @@
 # CVAD Ansible Modules
 
+[![CI](https://github.com/nbeernink/cvad-ansible-modules/actions/workflows/ansible-test.yml/badge.svg)](https://github.com/nbeernink/cvad-ansible-modules/actions/workflows/ansible-test.yml)
+[![CodeQL](https://github.com/nbeernink/cvad-ansible-modules/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nbeernink/cvad-ansible-modules/actions/workflows/github-code-scanning/codeql)
+
 Ansible modules for interacting with the [Citrix Virtual Apps and Desktops
 API](https://developer-docs.citrix.com/en-us/citrix-virtual-apps-desktops/citrix-cvad-rest-apis/overview)
 
