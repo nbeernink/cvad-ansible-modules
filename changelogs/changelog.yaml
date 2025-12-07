@@ -1,0 +1,18 @@
+---
+ancestor: null
+releases:
+  0.0.4:
+    changes:
+      bugfixes:
+        - Ensure ansible-sanity test completes succesfully
+        - Fix machine_info's python import
+      release_summary: Bugfix + coding style update
+    fragments:
+      - sanity.yml
+    release_date: '2025-11-17'
+  0.0.5:
+    changes:
+      release_summary: Add antsibull for changelog tracking
+    fragments:
+      - add_antsibull.yaml
+    release_date: '2025-12-07'
