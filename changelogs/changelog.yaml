@@ -16,3 +16,14 @@ releases:
     fragments:
       - add_antsibull.yaml
     release_date: '2025-12-07'
+  0.0.6:
+    changes:
+      release_summary: Add the first basic Citrix inventory plugin
+    fragments:
+      - add_inventory.yaml
+    plugins:
+      inventory:
+        - description: Citrix Virtual Apps and Desktops inventory plugin
+          name: cvad
+          namespace: null
+    release_date: '2025-12-07'
