@@ -41,5 +41,5 @@ collection install nbeernink.cvad`.
   - Adding machines to a specific machine catalog
   - ~~Adding machines to a specific delivery catalog~~
   - Your great idea here?
-* Set up automated linting/ansible-testing
+* ~~Set up automated linting~~/ansible-testing
 * Since Citrix publishes an [OpenAPI specification](https://developer-docs.citrix.com/en-us/citrix-virtual-apps-desktops/citrix-cvad-rest-apis/apis/citrix-cvad-rest-apis.json), hopefully this collection can be tested against a mock API provided via [prism](https://github.com/stoplightio/prism)
