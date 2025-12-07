@@ -27,6 +27,18 @@ can fill a gap.
 * `machine_maintenancemode` - allows turning on/off maintenance mode for
   a machine
 
+### Ansible inventory
+
+This collection also includes a really basic inventory plugin. It needs to
+be improved with:
+
+ * host filters
+ * grouping unregistered machines that should be registered
+ * grouping machines by maintenance mode
+ * group by delivery_groups
+ * group by machine_catalogs
+ * keyed groups (custom queries)
+
 # Installation
 You can install the collection from [Ansible
 Galaxy](https://galaxy.ansible.com/nbeernink/cvad) by running `ansible-galaxy
@@ -40,6 +52,7 @@ collection install nbeernink.cvad`.
   - Creating new Delivery & Machine catalogs
   - Adding machines to a specific machine catalog
   - ~~Adding machines to a specific delivery catalog~~
+  - ~~Inventory script~~
   - Your great idea here?
 * ~~Set up automated linting~~/ansible-testing
 * Since Citrix publishes an [OpenAPI specification](https://developer-docs.citrix.com/en-us/citrix-virtual-apps-desktops/citrix-cvad-rest-apis/apis/citrix-cvad-rest-apis.json), hopefully this collection can be tested against a mock API provided via [prism](https://github.com/stoplightio/prism)
