@@ -26,3 +26,6 @@ venv.bak/
 
 #changelogs
 changelogs/.plugin-cache.yaml
+
+# ansible-test sanity output
+tests/output
