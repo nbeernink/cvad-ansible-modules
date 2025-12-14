@@ -112,7 +112,7 @@ def run_module():
         else:
             machine_catalog_info = cvad_client.get(
                 f"/MachineCatalogs?fields={return_fields}"
-            )['Items']
+            )
 
         module.exit_json(changed=False, machine_catalog_info=machine_catalog_info)
 

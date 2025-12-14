@@ -122,7 +122,7 @@ def run_module():
         machine_catalog_id = cvad_client.find_machine_catalog_id_for_machine(machine_name)
 
         # Get list of machines in delivery group
-        machines = cvad_client.get(f"/DeliveryGroups/{group_name}/Machines")['Items']
+        machines = cvad_client.get(f"/DeliveryGroups/{group_name}/Machines")
 
         # Check if machine is already in catalog
         machine_in_catalog = any(

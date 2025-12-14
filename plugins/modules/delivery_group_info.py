@@ -114,7 +114,7 @@ def run_module():
         else:
             delivery_group_info = cvad_client.get(
                 f"/DeliveryGroups?fields={return_fields}"
-            )['Items']
+            )
 
         module.exit_json(changed=False, delivery_group_info=delivery_group_info)
 

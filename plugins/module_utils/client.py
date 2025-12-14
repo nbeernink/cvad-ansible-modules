@@ -7,6 +7,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 import json
+from time import sleep
 from ansible.module_utils.urls import Request
 
 
@@ -103,29 +104,70 @@ class CVADClient():
 
         self.cvad_header = cvad_header
 
-    def _request(self, method, endpoint, data=None, headers=None):
+    def _request(self, method, endpoint, data=None):
         """
-        Performs A REST request and return content or status code
+        Performs A REST request and returns content if present
         """
 
-        url = f"{self.base_url}/{endpoint}"
         payload = json.dumps(data) if data else None
+        all_items = []
 
-        try:
-            response = self.request.open(
-                method=method,
-                url=url,
-                data=payload,
-                headers=self.cvad_header if not None else headers,
-            )
+        base_request_url = f"{self.base_url}/{endpoint}"
 
-            if response.length != 0:
-                return json.loads(response.read())
+        # We'll loop over current_url when a ContinuationToken is in the response
+        current_url = base_request_url
 
-            return response.status
+        while True:
+            try:
+                response = self.request.open(
+                    method=method,
+                    url=current_url,
+                    data=payload,
+                    headers=self.cvad_header,
+                )
 
-        except AssertionError as http_error:
-            raise AssertionError(f"Request failed ({method} {url}): {http_error}") from http_error
+                if response.length != 0:
+                    json_resp = json.loads(response.read())
+
+                    if 'Items' in json_resp.keys():
+
+                        items = json_resp.get('Items', [])
+                        all_items.extend(items)
+
+                        # Multiple pages are coming in when response has a ContinuationToken
+                        if 'ContinuationToken' in json_resp.keys():
+                            continuation_token = json_resp.get('ContinuationToken')
+
+                            # Handle query parameter seperator
+                            # should be a '&' for multiple and '?' if only 1 param
+                            separator = '&' if '?' in base_request_url else '?'
+
+                            # Update current_url with the new continuation_token
+                            current_url = f"{base_request_url}" \
+                                f"{separator}" \
+                                f"continuationToken={continuation_token}"
+
+                            # Be gentle with the API
+                            sleep(0.5)
+
+                        else:
+                            # Paging through API complete, break out of the loop
+                            break
+
+                    else:
+                        # Return json response if there are no Items
+                        return json_resp
+
+                else:
+                    # No data received, also break from the loop
+                    break
+
+            except AssertionError as http_error:
+                raise AssertionError(
+                    f"Request failed ({method} {current_url}): {http_error}"
+                ) from http_error
+
+        return all_items
 
     # Search functions
     def _find_entity_field_by_name(self, endpoint: str, name: str, fields: str) -> str:
@@ -139,23 +181,19 @@ class CVADClient():
 
         Returns:
             dict or str: The value of the requested field.
-
-        Raises:
-            IndexError: If no item is found
-            KeyError: If the specified field is missing.
         """
+
+        # FIXME: This works but needs some cleaning up/type checking
 
         results = self.post(
             f"{endpoint}/$search?fields={fields}",
             data={'BasicSearchString': name}
         )
 
-        items = results.get('Items')
+        if not results:
+            raise AssertionError(f"No item found for search '{name}' at endpoint '{endpoint}'")
 
-        if not items:
-            raise IndexError(f"No item found for search '{name}' at endpoint '{endpoint}'")
-
-        first_item = items[0]
+        first_item = results[0]
 
         value = first_item.get(fields, None)
 
