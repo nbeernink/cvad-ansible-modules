@@ -50,6 +50,10 @@ DOCUMENTATION = '''
           - Validate certificates or not.
         type: boolean
         default: True
+      group_prefix:
+        description:
+          - prefix to apply to cvad groups
+        default: cvad_
 '''
 
 EXAMPLES = '''
@@ -61,7 +65,11 @@ EXAMPLES = '''
 '''
 
 from ansible.errors import AnsibleError
-from ansible.plugins.inventory import BaseInventoryPlugin, Cacheable
+from ansible.plugins.inventory import (
+    BaseInventoryPlugin,
+    Cacheable,
+    to_safe_group_name
+)
 from ansible_collections.nbeernink.cvad.plugins.module_utils.client import CVADClient
 
 
@@ -108,6 +116,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
         password = self.get_option('password')
         username = self.get_option('username')
         validate_certs = self.get_option('validate_certs')
+        group_prefix = self.get_option('group_prefix')
 
         try:
             cvad_client = CVADClient(
@@ -119,10 +128,43 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
 
             cvad_client.login()
 
-            all_machines = cvad_client.get("/Machines/?fields=DnsName")
+            all_machines = cvad_client.get(
+                "/Machines/?fields="
+                "DeliveryGroup,"
+                "DnsName,"
+                "InMaintenanceMode,"
+                "MachineCatalog,"
+                "MachineType,"
+                "PowerState"
+            )
+
+            maintenance_group = f"{group_prefix}in_maintenancemode"
+            self.inventory.add_group(maintenance_group)
 
             for machine in all_machines:
-                self.inventory.add_host(machine['DnsName'])
+                host_name = machine['DnsName']
+                self.inventory.add_host(host_name)
+
+                if machine['InMaintenanceMode']:
+                    self.inventory.add_child(maintenance_group, host_name)
+
+                # value based groups
+                for group in ['PowerState', 'MachineType']:
+                    state = machine[group]
+                    group_name = to_safe_group_name(f"{group_prefix}{group}_{state}").lower()
+                    self.inventory.add_group(group_name)
+                    self.inventory.add_child(group_name, host_name)
+
+                # nested group names
+                for group in ['DeliveryGroup', 'MachineCatalog']:
+
+                    if machine.get(f"{group}"):
+                        group_name = machine.get(f"{group}", {}).get('Name')
+                        group_name = to_safe_group_name(
+                            f"{group_prefix}{group}_{group_name}"
+                        ).lower()
+                        self.inventory.add_group(group_name)
+                        self.inventory.add_child(group_name, host_name)
 
         except Exception as error:
             raise AnsibleError from error

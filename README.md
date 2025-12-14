@@ -29,14 +29,14 @@ can fill a gap.
 
 ### Ansible inventory
 
-This collection also includes a really basic inventory plugin. It needs to
+This collection also includes a basic inventory plugin. It needs to
 be improved with:
 
  * host filters
  * grouping unregistered machines that should be registered
- * grouping machines by maintenance mode
- * group by delivery_groups
- * group by machine_catalogs
+ * ~~grouping machines by maintenance mode~~
+ * ~~group by delivery_groups~~
+ * ~~group by machine_catalogs~~
  * keyed groups (custom queries)
 
 # Installation
