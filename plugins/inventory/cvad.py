@@ -119,7 +119,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
 
             cvad_client.login()
 
-            all_machines = cvad_client.get("/Machines/?fields=DnsName")['Items']
+            all_machines = cvad_client.get("/Machines/?fields=DnsName")
 
             for machine in all_machines:
                 self.inventory.add_host(machine['DnsName'])
