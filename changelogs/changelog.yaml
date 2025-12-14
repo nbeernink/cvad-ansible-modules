@@ -27,3 +27,16 @@ releases:
           name: cvad
           namespace: null
     release_date: '2025-12-07'
+  0.0.7:
+    changes:
+      major_changes:
+        - Add inventory group_prefix
+        - Add inventory groups for MaintenanceMode, PowerState, MachineType, DeliveryGroup,
+          MachineCatalog
+        - Add support for paging through the REST API (ContinuationToken) https://developer-docs.citrix.com/en-us/citrix-virtual-apps-desktops/citrix-cvad-rest-apis/how-to-use-paging-to-query-many-objects-through-multiple-api-calls
+      release_summary: ContinuationToken and inventory upgrade
+    fragments:
+      - add_continuation_token_support.yml
+      - inventory_upgrade.yml
+      - v0.0.7.yaml
+    release_date: '2025-12-14'

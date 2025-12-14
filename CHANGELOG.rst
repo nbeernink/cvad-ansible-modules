@@ -4,6 +4,21 @@ nbeernink.cvad Release Notes
 
 .. contents:: Topics
 
+v0.0.7
+======
+
+Release Summary
+---------------
+
+ContinuationToken and inventory upgrade
+
+Major Changes
+-------------
+
+- Add inventory group_prefix
+- Add inventory groups for MaintenanceMode, PowerState, MachineType, DeliveryGroup, MachineCatalog
+- Add support for paging through the REST API (ContinuationToken) https://developer-docs.citrix.com/en-us/citrix-virtual-apps-desktops/citrix-cvad-rest-apis/how-to-use-paging-to-query-many-objects-through-multiple-api-calls
+
 v0.0.6
 ======
 

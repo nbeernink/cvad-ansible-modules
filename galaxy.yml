@@ -2,7 +2,7 @@
 namespace: nbeernink
 name: cvad
 description: Collection of modules for interacting with the Citrix Virtual Apps and Desktop API
-version: 0.0.6
+version: 0.0.7
 readme: README.md
 
 authors:
@@ -18,3 +18,9 @@ tags:
  - cvad
 
 dependencies: {}
+build_ignore:
+ - .gitignore
+ - changelogs/.plugin-cache.yaml
+ - changelogs/fragments
+ - playbooks
+ - tests
