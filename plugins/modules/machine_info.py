@@ -79,7 +79,6 @@ def run_module():
 
     try:
         cvad_client = CVADClient(**module.params)
-        cvad_client.login()
 
         machine_name = module.params['machine_name']
 

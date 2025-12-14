@@ -30,6 +30,8 @@ class CVADClient():
         self.request = Request(validate_certs=validate_certs)
         self.cvad_header = None
 
+        self.login()
+
     def _get_bearer_token(self) -> str:
         """ Return a bearer token using basic authentication """
 

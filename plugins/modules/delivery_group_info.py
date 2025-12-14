@@ -95,7 +95,6 @@ def run_module():
 
     try:
         cvad_client = CVADClient(**module.params)
-        cvad_client.login()
 
         group_name = module.params['delivery_group']
 

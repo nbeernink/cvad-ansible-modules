@@ -126,8 +126,6 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
                 validate_certs=validate_certs
             )
 
-            cvad_client.login()
-
             all_machines = cvad_client.get(
                 "/Machines/?fields="
                 "DeliveryGroup,"

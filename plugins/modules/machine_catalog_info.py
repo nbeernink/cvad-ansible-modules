@@ -94,7 +94,6 @@ def run_module():
 
     try:
         cvad_client = CVADClient(**module.params)
-        cvad_client.login()
 
         catalog_name = module.params['machine_catalog']
         catalog_id = cvad_client.find_machine_catalog_by_id(catalog_name)
