@@ -245,6 +245,10 @@ class CVADClient():
         return str(catalog_id)
 
     # CRUD operations
+    def head(self, endpoint):
+        """Perform a HEAD request"""
+        return self._request('HEAD', endpoint)
+
     def get(self, endpoint):
         """Perform a GET request"""
         return self._request('GET', endpoint)
