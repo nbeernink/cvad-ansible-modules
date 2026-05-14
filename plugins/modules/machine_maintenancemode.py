@@ -108,7 +108,7 @@ def run_module():
                     f"/Machines/{machine_id}",
                     data={'InMaintenanceMode': 'False'}
                 )
-            msg = f"Machine '{machine_name}' entered maintenance mode."
+            msg = f"Machine '{machine_name}' exited maintenance mode."
             changed = True
 
         elif state == 'on' and not machine_info['InMaintenanceMode']:
@@ -117,7 +117,7 @@ def run_module():
                     f"/Machines/{machine_id}",
                     data={'InMaintenanceMode': 'true'}
                 )
-            msg = f"Machine '{machine_name}' exited maintenance mode."
+            msg = f"Machine '{machine_name}' entered maintenance mode."
             changed = True
 
         else:
