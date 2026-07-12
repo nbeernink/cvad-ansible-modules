@@ -23,6 +23,7 @@ can fill a gap.
 * `delivery_group_info` - returns info for a delivery group
 * `delivery_group_machines` - assigns/removes machines in a delivery group
 * `machine_catalog_info` - returns info for a machine catalog
+* `machine_catalog_machines` - assigns/removes machines in a machine catalog
 * `machine_info` - returns info for a given machine
 * `machine_maintenancemode` - allows turning on/off maintenance mode for
   a machine
