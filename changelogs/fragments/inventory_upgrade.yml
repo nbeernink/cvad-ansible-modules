@@ -1,4 +1,0 @@
----
-major_changes:
-  - Add inventory group_prefix
-  - Add inventory groups for MaintenanceMode, PowerState, MachineType, DeliveryGroup, MachineCatalog

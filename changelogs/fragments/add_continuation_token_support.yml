@@ -1,4 +1,0 @@
----
-major_changes:
-  - Add support for paging through the REST API (ContinuationToken)
-    https://developer-docs.citrix.com/en-us/citrix-virtual-apps-desktops/citrix-cvad-rest-apis/how-to-use-paging-to-query-many-objects-through-multiple-api-calls

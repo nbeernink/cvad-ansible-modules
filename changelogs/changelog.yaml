@@ -40,3 +40,16 @@ releases:
       - inventory_upgrade.yml
       - v0.0.7.yaml
     release_date: '2025-12-14'
+  0.0.8:
+    changes:
+      minor_changes:
+        - Added new module `machine_catalog_machines`
+        - Bugfix machine_maintenance_mode swapped info messages (it would say exiting maintenance when in reality it would enter and the other way around)
+      release_summary: 'This 0.0.8 release adds a new module `machine_catalog_machines`
+        as well as a bugfix for the maintenance module
+
+        '
+    fragments:
+      - new_module_machine_catalog_machines.yml
+      - release-0.0.8.yml
+    release_date: '2026-07-12'
