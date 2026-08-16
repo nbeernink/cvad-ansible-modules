@@ -4,6 +4,14 @@ nbeernink.cvad Release Notes
 
 .. contents:: Topics
 
+v0.0.9
+======
+
+Minor Changes
+-------------
+
+- Add machine user assignment module
+
 v0.0.8
 ======
 
@@ -16,8 +24,7 @@ Minor Changes
 -------------
 
 - Added new module `machine_catalog_machines`
-- Bugfix machine_maintenance_mode swapped info messages (it would say exiting
-  maintenance when in reality it would enter and the other way around)
+- Bugfix machine_maintenance_mode swapped info messages (it would say exiting maintenance when in reality it would enter and the other way around)
 
 v0.0.7
 ======
