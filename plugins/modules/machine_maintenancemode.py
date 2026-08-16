@@ -36,6 +36,11 @@ options:
     type: str
     required: true
     aliases: ['name', 'machine']
+  reason:
+    description:
+      - The message to set as reason for maintenance mode
+    type: str
+    required: false
   state:
     description:
       - If set to 'on', then place machine in maintenance mode.
@@ -80,6 +85,10 @@ def run_module():
             required=True,
             aliases=['name', 'machine']
         ),
+        reason=dict(
+            type='str',
+            required=False,
+        ),
         state=dict(
             type='str',
             default='off',
@@ -98,6 +107,7 @@ def run_module():
 
         machine_name = module.params['machine_name']
         machine_id = cvad_client.find_machine_id(machine_name)
+        reason = module.params['reason']
         state = module.params['state']
 
         machine_info = cvad_client.get(f"/Machines/{machine_id}")
@@ -112,10 +122,16 @@ def run_module():
             changed = True
 
         elif state == 'on' and not machine_info['InMaintenanceMode']:
+
+            payload = {'InMaintenanceMode': 'true'}
+
+            if reason:
+                payload['Metadata'] = [{'Name': 'MaintenanceModeMessage', 'Value': reason}]
+
             if not module.check_mode:
                 cvad_client.patch(
                     f"/Machines/{machine_id}",
-                    data={'InMaintenanceMode': 'true'}
+                    data=payload
                 )
             msg = f"Machine '{machine_name}' entered maintenance mode."
             changed = True
