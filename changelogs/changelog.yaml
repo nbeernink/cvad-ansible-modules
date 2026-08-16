@@ -61,3 +61,12 @@ releases:
     fragments:
       - add_machine_user_module.yml
     release_date: '2026-08-16'
+  0.0.10:
+    changes:
+      minor_changes:
+        - Add support for module_defaults
+        - Allow specifying a message as reason for maintenance mode
+    fragments:
+      - add_maintenance_mode_message.yml
+      - add_module_defaults.yml
+    release_date: '2026-08-16'

@@ -4,6 +4,15 @@ nbeernink.cvad Release Notes
 
 .. contents:: Topics
 
+v0.0.10
+=======
+
+Minor Changes
+-------------
+
+- Add support for module_defaults
+- Allow specifying a message as reason for maintenance mode
+
 v0.0.9
 ======
 
