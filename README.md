@@ -118,6 +118,45 @@ ansible-galaxy collection install nbeernink.cvad
     state: present
 ```
 
+# Using module defaults groups
+
+This collection supports using [module defaults groups](https://docs.ansible.com/ansible/latest/user_guide/playbooks_module_defaults.html#module-defaults-groups) to reduce repeated module parameters in playbooks.
+
+Example usage:
+
+```yaml
+---
+- name: On-board new Citrix Remote PC
+  gather_facts: false
+  hosts: localhost
+
+  module_defaults:
+    group/nbeernink.cvad.cvad:
+      ddc_server: my-ddc.example.org
+      username: admin
+      password: "{{ vault_password }}"
+
+  tasks:
+    - name: Add machine to Machine Catalog
+      nbeernink.cvad.machine_catalog_machines:
+        machine_name: EXAMPLE.ORG\my-machine
+        machine_catalog: RemotePC_Catalog
+        state: present
+
+    - name: Assign machine to Delivery Group
+      nbeernink.cvad.delivery_group_machines:
+        machine_name: my-machine.example.org
+        delivery_group: RemotePC_DeliveryGroup
+        state: present
+
+    - name: Assign user to Remote PC machine
+      nbeernink.cvad.machine_user_assignment:
+        machine_name: my-machine.example.org
+        users:
+          - j.doe@example.org
+        state: present
+```
+
 ---
 
 ## Roadmap

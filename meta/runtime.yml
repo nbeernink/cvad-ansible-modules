@@ -1,2 +1,11 @@
 ---
+action_groups:
+  cvad:
+    - delivery_group_info
+    - delivery_group_machines
+    - machine_catalog_info
+    - machine_catalog_machines
+    - machine_info
+    - machine_maintenancemode
+    - machine_user_assignment
 requires_ansible: '>=2.16.14'
