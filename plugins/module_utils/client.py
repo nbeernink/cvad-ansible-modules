@@ -262,3 +262,44 @@ class CVADClient():
     def delete(self, endpoint):
         """Perform a DELETE request"""
         return self._request("DELETE", endpoint)
+
+    # Machine User Helper methods
+    @staticmethod
+    def matches_user(target_user, existing_user_obj) -> bool:
+        """
+        Check if target_user string matches an existing user object or string representation.
+        """
+        target = target_user.strip().lower()
+        if not target:
+            return False
+
+        if isinstance(existing_user_obj, str):
+            return existing_user_obj.strip().lower() == target
+
+        if isinstance(existing_user_obj, dict):
+            candidates = {
+                (existing_user_obj.get('SamName') or '').strip().lower(),
+                (existing_user_obj.get('PrincipalName') or '').strip().lower(),
+                (existing_user_obj.get('SamAccountName') or '').strip().lower(),
+                (existing_user_obj.get('Sid') or '').strip().lower(),
+                (existing_user_obj.get('DisplayName') or '').strip().lower(),
+                (existing_user_obj.get('Name') or '').strip().lower(),
+            }
+            candidates.discard('')
+            return target in candidates
+
+        return False
+
+    @staticmethod
+    def get_user_identity_string(user_obj) -> str:
+        """
+        Get the best canonical string representation for an assigned user object.
+        """
+        if isinstance(user_obj, str):
+            return user_obj
+        if isinstance(user_obj, dict):
+            for key in ('SamName', 'PrincipalName', 'Sid', 'SamAccountName', 'DisplayName', 'Name'):
+                val = user_obj.get(key)
+                if val and isinstance(val, str) and val.strip():
+                    return val.strip()
+        return str(user_obj)

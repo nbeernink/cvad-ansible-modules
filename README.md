@@ -47,6 +47,7 @@ Ansible's playbook model helps with these kinds of operational workflows.
 | `machine_catalog_machines` | Add or remove machines from a Machine Catalog |
 | `machine_info` | Retrieve information about a specific machine |
 | `machine_maintenancemode` | Enable or disable maintenance mode for a machine |
+| `machine_user_assignment` | Assign or Unassign a machine to a user |
 
 ### Ansible Inventory Plugin
 
@@ -121,7 +122,7 @@ ansible-galaxy collection install nbeernink.cvad
 
 ## Roadmap
 
-- [ ] Assign/remove users for a given machine
+- [x] Assign/remove users for a given machine
 - [ ] Control machine power state
 - [ ] Create new Delivery Groups and Machine Catalogs
 - [x] Add/remove machines from a Machine Catalog
