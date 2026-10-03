@@ -9,7 +9,7 @@ An Ansible collection for managing the lifecycle of machines in [Citrix Virtual 
 
 ## Who is this for?
 
-Citrix provides **Machine Creation Services (MCS)** as a way to provision and manage virtual machines automatically. However, many organizations rely on **physical machines** or **manually provisioned VMs** — for example, environments running **Citrix Remote PC Access**.
+Citrix provides **Machine Creation Services (MCS)** as a way to provision and manage virtual machines automatically. However some organizations rely on **physical machines** running **Citrix Remote PC** or **manually provisioned VMs**.
 
 In these non-MCS environments, Citrix's first-party tooling (such as the [Terraform provider](https://github.com/citrix/terraform-provider-citrix)) may not fully cover operational needs like:
 
