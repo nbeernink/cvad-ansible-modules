@@ -8,6 +8,7 @@ __metaclass__ = type
 
 import json
 from time import sleep
+from urllib.error import HTTPError
 from ansible.module_utils.urls import Request
 
 
@@ -104,13 +105,52 @@ class CVADClient():
 
         self.cvad_header = cvad_header
 
+    # Maximum number of consecutive rate limit (HTTP 429) retries before giving up
+    _MAX_RATE_LIMIT_RETRIES = 5
+    # Fallback wait time in seconds in case retryDelay cannot be parsed
+    _DEFAULT_RETRY_DELAY = 10
+
+    @staticmethod
+    def _parse_retry_delay(error_body, default_delay):
+        """
+        Parse the retry delay (in seconds) from a HTTP 429 response payload
+
+        The Citrix CVAD REST API returns the number of seconds to wait in a
+        'retryDelay' parameter inside the response body, for example:
+
+            {
+                "parameters": [
+                    { "name": "retryDelay", "value": "4" }
+                ]
+            }
+
+        Returns the retryDelay value as an integer, or default_delay when the
+        value cannot be determined.
+        """
+        try:
+            error_json = json.loads(error_body)
+        except (json.JSONDecodeError, TypeError, ValueError):
+            return default_delay
+
+        for param in error_json.get("parameters", []):
+            if param.get("name") == "retryDelay":
+                try:
+                    return int(param["value"])
+                except (KeyError, ValueError, TypeError):
+                    break
+
+        return default_delay
+
     def _request(self, method, endpoint, data=None):
         """
-        Performs A REST request and returns content if present
+        Performs a REST request and returns content if present
+        Automatically retries on HTTP 429 (rate limit exceeded), waiting the
+        number of seconds specified in the response body before giving it another try
         """
 
         payload = json.dumps(data) if data else None
         all_items = []
+        rate_limit_retries = 0
 
         base_request_url = f"{self.base_url}/{endpoint}"
 
@@ -125,6 +165,9 @@ class CVADClient():
                     data=payload,
                     headers=self.cvad_header,
                 )
+
+                # A successful response resets the rate-limit retry counter
+                rate_limit_retries = 0
 
                 if response.length != 0:
                     json_resp = json.loads(response.read())
@@ -162,10 +205,30 @@ class CVADClient():
                     # No data received, also break from the loop
                     break
 
-            except AssertionError as http_error:
+            except HTTPError as http_error:
+                if http_error.code == 429:
+                    rate_limit_retries += 1
+                    if rate_limit_retries > self._MAX_RATE_LIMIT_RETRIES:
+                        raise AssertionError(
+                            f"Request failed ({method} {current_url}): rate limit exceeded "
+                            f"and retry limit ({self._MAX_RATE_LIMIT_RETRIES}) reached."
+                        ) from http_error
+
+                    retry_delay = self._parse_retry_delay(
+                        http_error.read(), self._DEFAULT_RETRY_DELAY
+                    )
+                    sleep(retry_delay)
+                    continue
+
                 raise AssertionError(
                     f"Request failed ({method} {current_url}): {http_error}"
                 ) from http_error
+            except AssertionError:
+                raise
+            except Exception as err:
+                raise AssertionError(
+                    f"Request failed ({method} {current_url}): {err}"
+                ) from err
 
         return all_items
 

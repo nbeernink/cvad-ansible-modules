@@ -1,0 +1,5 @@
+---
+minor_changes:
+  - Implemented HTTP 429 API rate limit handling, client will now follow the
+    API's instructions for up to a max of 5 retries.
+    If no delay is given, the default is to wait 10 seconds (should be rare)
