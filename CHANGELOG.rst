@@ -4,6 +4,14 @@ nbeernink.cvad Release Notes
 
 .. contents:: Topics
 
+v0.0.11
+=======
+
+Minor Changes
+-------------
+
+- Implemented HTTP 429 API rate limit handling, client will now follow the API's instructions for up to a max of 5 retries. If no delay is given, the default is to wait 10 seconds (should be rare)
+
 v0.0.10
 =======
 

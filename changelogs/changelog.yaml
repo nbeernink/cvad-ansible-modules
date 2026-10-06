@@ -1,6 +1,24 @@
 ---
 ancestor: null
 releases:
+  0.0.10:
+    changes:
+      minor_changes:
+        - Add support for module_defaults
+        - Allow specifying a message as reason for maintenance mode
+    fragments:
+      - add_maintenance_mode_message.yml
+      - add_module_defaults.yml
+    release_date: '2026-08-16'
+  0.0.11:
+    changes:
+      minor_changes:
+        - Implemented HTTP 429 API rate limit handling, client will now follow the
+          API's instructions for up to a max of 5 retries. If no delay is given, the
+          default is to wait 10 seconds (should be rare)
+    fragments:
+      - implement_rate_limit_handling.yml
+    release_date: '2026-10-06'
   0.0.4:
     changes:
       bugfixes:
@@ -60,13 +78,4 @@ releases:
         - Add machine user assignment module
     fragments:
       - add_machine_user_module.yml
-    release_date: '2026-08-16'
-  0.0.10:
-    changes:
-      minor_changes:
-        - Add support for module_defaults
-        - Allow specifying a message as reason for maintenance mode
-    fragments:
-      - add_maintenance_mode_message.yml
-      - add_module_defaults.yml
     release_date: '2026-08-16'
