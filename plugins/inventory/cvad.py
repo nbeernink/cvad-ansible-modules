@@ -54,6 +54,137 @@ DOCUMENTATION = '''
         description:
           - prefix to apply to cvad groups
         default: cvad_
+      machine_filter:
+        description:
+          - A search filter dict passed to the C(/Machines/$search) API endpoint.
+          - Exactly one of C(BasicSearchString), C(SearchFilters), or
+            C(SearchFilterGroups) must be provided. These modes are mutually
+            exclusive because each triggers a different type of search.
+        type: dict
+        suboptions:
+          BasicSearchString:
+            description: Free-text string matched against machine properties.
+            type: str
+          SearchFilters:
+            description: List of property filters combined with AND logic.
+            type: list
+            elements: dict
+            suboptions:
+              Property:
+                description: The machine property to filter on (e.g. V(OSType)).
+                type: str
+                required: true
+                choices: [
+                  AgentVersion,
+                  AllocationType,
+                  AppState,
+                  AppsInUse,
+                  AzureAdJoinedMode,
+                  ControllerDnsName,
+                  ClientIP,
+                  ClientName,
+                  CloudPCProvisioningType,
+                  ConnectedViaHostName,
+                  ConnectedViaIP,
+                  HypervisorConnection,
+                  ConnectionProtocol,
+                  CurrentUser,
+                  DeliveryGroup,
+                  FaultState,
+                  IsAssigned,
+                  LastConnectionUser,
+                  LastConnectionTime,
+                  LastDeregistrationReason,
+                  LastDeregistrationTime,
+                  LaunchedViaHostName,
+                  LaunchedViaIP,
+                  PublishedName,
+                  LoadIndex,
+                  StartTime,
+                  MachineCatalog,
+                  MachineUnavailableReason,
+                  InMaintenanceMode,
+                  MaintenanceModeReason,
+                  DrainingUntilShutdown,
+                  MachineName,
+                  OSType,
+                  OSVersion,
+                  ImageOutOfDate,
+                  PowerActionPending,
+                  ClientVersion,
+                  PowerState,
+                  SupportedPowerActions,
+                  RegistrationState,
+                  SecureIcaActive,
+                  HostingServerName,
+                  SessionCount,
+                  SessionStateChangeTime,
+                  SessionState,
+                  SessionSupport,
+                  SmartAccessFilters,
+                  SummaryState,
+                  Tags,
+                  UserPrincipalName,
+                  UserName,
+                  UserDisplayName,
+                  HostedMachineName,
+                  WindowsConnectionSetting,
+                  FunctionalLevel,
+                  DnsName,
+                  Uid,
+                  Id,
+                  VdaUpgrade,
+                  VdaUpgradeState,
+                  ProvisioningType,
+                  ZoneName,
+                  CriticalIssues,
+                  NonCriticalIssues,
+                  ProvisioningMaintenanceMode,
+                  ConnectorId,
+                ]
+              Value:
+                description: The value to compare against.
+                type: str
+                required: true
+              Operator:
+                description: Comparison operator.
+                type: str
+                required: true
+                choices: [
+                  Equals,
+                  NotEquals,
+                  LessThan,
+                  GreaterThan,
+                  LessThanOrEquals,
+                  GreaterThanOrEquals,
+                  Like,
+                  NotLike,
+                  EndsWith,
+                  NotEndsWith,
+                  StartsWith,
+                  NotStartsWith,
+                  Any,
+                  None,
+                  Contains,
+                  NotContains,
+                  ContainsLike,
+                  NotContainsLike,
+                  ContainsEndsWith,
+                  NotContainsEndsWith,
+                  ContainsStartsWith,
+                  NotContainsStartsWith,
+                  In,
+                  NotIn,
+                  IsWithin,
+                  IsNotWithin,
+                ]
+          SearchFilterGroups:
+            description: >
+              List of filter group objects. Each group may contain its own
+              C(SearchFilters), a C(SearchFilterGroupType) C(And)|C(Or),
+              and nested SearchFilterGroups for arbitrary depth.
+            type: list
+            elements: dict
 '''
 
 EXAMPLES = '''
@@ -62,6 +193,29 @@ EXAMPLES = '''
   ddc_server: my-example-ddc.example.com
   username: my-api-user
   password: changeme
+
+  # Only return machines matching a free-text search
+  machine_filter:
+    BasicSearchString: "example.com"
+
+  # Filter by a specific property
+  machine_filter:
+    SearchFilters:
+      - Property: OSType
+        Operator: ContainsLike
+        Value: "linux"
+
+  # Combine filter groups with OR logic
+  machine_filter:
+    SearchFilterGroups:
+      - SearchFilterGroupType: Or
+        SearchFilters:
+          - Property: RegistrationState
+            Operator: Contains
+            Value: Unregistered
+          - Property: RegistrationState
+            Operator: Contains
+            Value: AgentError
 '''
 
 from ansible.errors import AnsibleError
@@ -117,6 +271,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
         username = self.get_option('username')
         validate_certs = self.get_option('validate_certs')
         group_prefix = self.get_option('group_prefix')
+        machine_filter = self.get_option('machine_filter')
 
         try:
             cvad_client = CVADClient(
@@ -125,18 +280,15 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
                 password=password,
                 validate_certs=validate_certs
             )
-
             cvad_client.login()
 
-            all_machines = cvad_client.get(
-                "/Machines/?fields="
-                "DeliveryGroup,"
-                "DnsName,"
-                "InMaintenanceMode,"
-                "MachineCatalog,"
-                "MachineType,"
-                "PowerState"
-            )
+            if machine_filter is not None:
+                all_machines = cvad_client.post(
+                    "/Machines/$search",
+                    machine_filter
+                )
+            else:
+                all_machines = cvad_client.get('/Machines')
 
             maintenance_group = f"{group_prefix}in_maintenancemode"
             self.inventory.add_group(maintenance_group)
