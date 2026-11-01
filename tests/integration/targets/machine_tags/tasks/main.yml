@@ -1,0 +1,164 @@
+---
+- name: Test machine_tags module
+  module_defaults:
+    nbeernink.cvad.machine_tags:
+      ddc_server: "{{ ddc_server }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: "{{ validate_certs }}"
+      machine_name: "{{ machine_name }}"
+  block:
+    # -------------------------------------------------------------
+    # 0. Baseline setup: remove all tags
+    # -------------------------------------------------------------
+    - name: "0. Baseline: Ensure clean state by removing all tags"
+      nbeernink.cvad.machine_tags:
+        state: absent
+      register: baseline_cleanup
+
+    # -------------------------------------------------------------
+    # 1. Add single tag
+    # -------------------------------------------------------------
+    - name: "1.1. Add single tag to machine"
+      nbeernink.cvad.machine_tags:
+        tags: "{{ single_tag }}"
+        state: present
+      register: add_single
+
+    - name: "1.1. Assert single tag added successfully"
+      ansible.builtin.assert:
+        that:
+          - add_single is changed
+          - "'attached tag(s)' in add_single.msg"
+          - "single_tag[0] in add_single.msg"
+        fail_msg: "Failed to add single tag: {{ add_single.msg }}"
+
+    - name: "1.2. Idempotency: Add single tag again (expect no change)"
+      nbeernink.cvad.machine_tags:
+        tags: "{{ single_tag }}"
+        state: present
+      register: add_single_idempotent
+
+    - name: "1.2. Assert adding single tag again is idempotent"
+      ansible.builtin.assert:
+        that:
+          - add_single_idempotent is not changed
+        fail_msg: "Adding single tag was not idempotent: {{ add_single_idempotent.msg }}"
+
+    # -------------------------------------------------------------
+    # 2. Add multiple tags
+    # -------------------------------------------------------------
+    - name: "2.1. Add multiple tags to machine"
+      nbeernink.cvad.machine_tags:
+        tags: "{{ multiple_tags }}"
+        state: present
+      register: add_multi
+
+    - name: "2.1. Assert multiple tags added (first kept, second added)"
+      ansible.builtin.assert:
+        that:
+          - add_multi is changed
+          - "'attached tag(s)' in add_multi.msg"
+          - "multiple_tags[1] in add_multi.msg"
+        fail_msg: "Failed to add multiple tags: {{ add_multi.msg }}"
+
+    - name: "2.2. Idempotency: Add multiple tags again (expect no change)"
+      nbeernink.cvad.machine_tags:
+        tags: "{{ multiple_tags }}"
+        state: present
+      register: add_multi_idempotent
+
+    - name: "2.2. Assert adding multiple tags is idempotent"
+      ansible.builtin.assert:
+        that:
+          - add_multi_idempotent is not changed
+        fail_msg: "Adding multiple tags was not idempotent: {{ add_multi_idempotent.msg }}"
+
+    # -------------------------------------------------------------
+    # 3. Remove specific tag
+    # -------------------------------------------------------------
+    - name: "3.1. Remove specific tag from machine"
+      nbeernink.cvad.machine_tags:
+        tags: "{{ single_tag }}"
+        state: absent
+      register: remove_specific
+
+    - name: "3.1. Assert specific tag removed"
+      ansible.builtin.assert:
+        that:
+          - remove_specific is changed
+          - "'detached tag(s)' in remove_specific.msg"
+          - "single_tag[0] in remove_specific.msg"
+        fail_msg: "Failed to remove specific tag: {{ remove_specific.msg }}"
+
+    - name: "3.2. Idempotency: Remove specific tag again (expect no change)"
+      nbeernink.cvad.machine_tags:
+        tags: "{{ single_tag }}"
+        state: absent
+      register: remove_specific_idempotent
+
+    - name: "3.2. Assert removing specific tag is idempotent"
+      ansible.builtin.assert:
+        that:
+          - remove_specific_idempotent is not changed
+        fail_msg: "Removing specific tag was not idempotent: {{ remove_specific_idempotent.msg }}"
+
+    # -------------------------------------------------------------
+    # 4. Add with remove_extra_tags (add purge_tags, purge remaining multiple_tags)
+    # -------------------------------------------------------------
+    - name: "4.1. Add tags with remove_extra_tags=true"
+      nbeernink.cvad.machine_tags:
+        tags: "{{ purge_tags }}"
+        state: present
+        remove_extra_tags: true
+      register: add_purge
+
+    - name: "4.1. Assert new tags added and extra tag deleted in combined message"
+      ansible.builtin.assert:
+        that:
+          - add_purge is changed
+          - "'attached tag(s)' in add_purge.msg"
+          - "purge_tags[0] in add_purge.msg"
+          - "purge_tags[1] in add_purge.msg"
+          - "'detached tag(s)' in add_purge.msg"
+          - "multiple_tags[1] in add_purge.msg"
+        fail_msg: "Combined add and remove_extra_tags failed: {{ add_purge.msg }}"
+
+    - name: "4.2. Idempotency: Add with remove_extra_tags again (expect no change)"
+      nbeernink.cvad.machine_tags:
+        tags: "{{ purge_tags }}"
+        state: present
+        remove_extra_tags: true
+      register: add_purge_idempotent
+
+    - name: "4.2. Assert add with remove_extra_tags is idempotent"
+      ansible.builtin.assert:
+        that:
+          - add_purge_idempotent is not changed
+        fail_msg: "Add with remove_extra_tags was not idempotent: {{ add_purge_idempotent.msg }}"
+
+    # -------------------------------------------------------------
+    # 5. Remove all tags
+    # -------------------------------------------------------------
+    - name: "5.1. Remove all tags from machine (state=absent without tags)"
+      nbeernink.cvad.machine_tags:
+        state: absent
+      register: remove_all
+
+    - name: "5.1. Assert all tags removed"
+      ansible.builtin.assert:
+        that:
+          - remove_all is changed
+          - "'detached tag(s)' in remove_all.msg"
+        fail_msg: "Failed to remove all tags: {{ remove_all.msg }}"
+
+    - name: "5.2. Idempotency: Remove all tags again (expect no change)"
+      nbeernink.cvad.machine_tags:
+        state: absent
+      register: remove_all_idempotent
+
+    - name: "5.2. Assert remove all tags is idempotent"
+      ansible.builtin.assert:
+        that:
+          - remove_all_idempotent is not changed
+        fail_msg: "Removing all tags was not idempotent: {{ remove_all_idempotent.msg }}"

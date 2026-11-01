@@ -7,5 +7,6 @@ action_groups:
     - machine_catalog_machines
     - machine_info
     - machine_maintenancemode
+    - machine_tags
     - machine_user_assignment
 requires_ansible: '>=2.16.14'

@@ -310,8 +310,8 @@ class CVADClient():
         """Perform a GET request"""
         return self._request('GET', endpoint)
 
-    def post(self, endpoint, data):
-        """Perform a POST request"""
+    def post(self, endpoint, data=None):
+        """Perform a POST request. data is optional for bodyless POST calls."""
         return self._request('POST', endpoint, data)
 
     def patch(self, endpoint, data):
