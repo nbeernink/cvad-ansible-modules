@@ -4,6 +4,14 @@ nbeernink.cvad Release Notes
 
 .. contents:: Topics
 
+v0.0.12
+=======
+
+Minor Changes
+-------------
+
+- Added `machine_tags` module to manage a machine's tags
+
 v0.0.11
 =======
 

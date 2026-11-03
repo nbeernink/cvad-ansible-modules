@@ -19,6 +19,13 @@ releases:
     fragments:
       - implement_rate_limit_handling.yml
     release_date: '2026-10-06'
+  0.0.12:
+    changes:
+      minor_changes:
+        - Added `machine_tags` module to manage a machine's tags
+    fragments:
+      - add_machine_tags_module.yml
+    release_date: '2026-11-03'
   0.0.4:
     changes:
       bugfixes:
