@@ -47,6 +47,7 @@ Ansible's playbook model helps with these kinds of operational workflows.
 | `machine_catalog_machines` | Add or remove machines from a Machine Catalog |
 | `machine_info` | Retrieve information about a specific machine |
 | `machine_maintenancemode` | Enable or disable maintenance mode for a machine |
+| `machine_tags` | Attach or detach tags to a machine |
 | `machine_user_assignment` | Assign or Unassign a machine to a user |
 
 ### Ansible Inventory Plugin

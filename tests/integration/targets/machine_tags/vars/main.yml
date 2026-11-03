@@ -1,0 +1,17 @@
+---
+ddc_server: "{{ lookup('env', 'CVAD_DDC_SERVER') }}"
+username: "{{ lookup('env', 'CVAD_USERNAME') }}"
+password: "{{ lookup('env', 'CVAD_PASSWORD') }}"
+validate_certs: "{{ lookup('env', 'CVAD_VALIDATE_CERTS') }}"
+machine_name: "{{ lookup('env', 'CVAD_TEST_MACHINE') }}"
+
+single_tag:
+  - "TestTag1"
+
+multiple_tags:
+  - "TestTag1"
+  - "TestTag2"
+
+purge_tags:
+  - "TestTag1"
+  - "TestTag3"
