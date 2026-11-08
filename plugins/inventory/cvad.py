@@ -64,7 +64,7 @@ EXAMPLES = '''
   password: changeme
 '''
 
-from ansible.errors import AnsibleError
+from ansible.errors import AnsibleParserError
 from ansible.plugins.inventory import (
     BaseInventoryPlugin,
     Cacheable,
@@ -167,4 +167,4 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
                         self.inventory.add_child(group_name, host_name)
 
         except Exception as error:
-            raise AnsibleError from error
+            raise AnsibleParserError from error
