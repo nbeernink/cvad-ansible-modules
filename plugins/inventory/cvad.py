@@ -142,7 +142,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
             self.inventory.add_group(maintenance_group)
 
             for machine in all_machines:
-                host_name = machine['DnsName']
+                host_name = machine['DnsName'].lower()
                 self.inventory.add_host(host_name)
 
                 if machine['InMaintenanceMode']:
