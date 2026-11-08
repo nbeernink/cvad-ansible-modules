@@ -58,10 +58,34 @@ This collection includes an inventory plugin (`nbeernink.cvad.cvad`) that dynami
 - Machine Catalog
 - Maintenance mode status
 
+#### Keyed groups
+
+Keyed groups allow you to dynamically group all retrieved machines by for example `AgentVersion` or `RegistrationState`:
+
+```yaml
+---
+plugin: nbeernink.cvad.cvad
+ddc_server: my-example-ddc.example.com
+username: my-api-user
+password: changeme
+
+keyed_groups:
+  - prefix: cvad
+    key: AgentVersion
+
+  # group by RegistrationState and lowercase the groupname
+  - prefix: cvad
+    key: RegistrationState | lower
+```
+
+This would produce groups like:
+
+* `cvad_unregistered` which holds all unregistered machines
+* `cvad_26_07_0_39` which holds machines with that AgentVersion
+
+
 Planned improvements:
 - Host filters
-- Grouping of unregistered machines (e.g., machines that should be registered but aren't)
-- Keyed groups (custom query-based grouping)
 
 ### CVADClient (Module Utility)
 

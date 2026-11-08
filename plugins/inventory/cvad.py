@@ -27,6 +27,7 @@ DOCUMENTATION = '''
         - Get inventory hosts from the CItrix Delivery Controller.
         - Uses a YAML configuration file ending with ``cvad.(yaml|yml)``.
     extends_documentation_fragment:
+      - constructed
       - inventory_cache
     options:
       plugin:
@@ -62,18 +63,26 @@ EXAMPLES = '''
   ddc_server: my-example-ddc.example.com
   username: my-api-user
   password: changeme
+  keyed_groups:
+    - prefix: cvad
+      key: AgentVersion
+
+    # group by RegistrationState and lowercase the groupname
+    - prefix: cvad
+      key: RegistrationState | lower
 '''
 
 from ansible.errors import AnsibleError
 from ansible.plugins.inventory import (
     BaseInventoryPlugin,
     Cacheable,
+    Constructable,
     to_safe_group_name
 )
 from ansible_collections.nbeernink.cvad.plugins.module_utils.client import CVADClient
 
 
-class InventoryModule(BaseInventoryPlugin, Cacheable):
+class InventoryModule(BaseInventoryPlugin, Cacheable, Constructable):
     """
     Host inventory parser for ansible using Citrix Delivery Controller as source.
     """
@@ -117,6 +126,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
         username = self.get_option('username')
         validate_certs = self.get_option('validate_certs')
         group_prefix = self.get_option('group_prefix')
+        strict = self.get_option('strict')
 
         try:
             cvad_client = CVADClient(
@@ -165,6 +175,24 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
                         ).lower()
                         self.inventory.add_group(group_name)
                         self.inventory.add_child(group_name, host_name)
+
+                # keyed groups
+                keyed_groups_config = self.get_option('keyed_groups')
+
+                if keyed_groups_config:
+                    # FIXME: Probably not the best idea to directly map this
+                    # but it seems to work
+                    hostvars = machine
+
+                    for key, val in hostvars.items():
+                        self.inventory.set_variable(host_name, key, val)
+
+                    self._add_host_to_keyed_groups(
+                        keys=keyed_groups_config,
+                        variables=hostvars,
+                        host=host_name,
+                        strict=strict
+                    )
 
         except Exception as error:
             raise AnsibleError from error
