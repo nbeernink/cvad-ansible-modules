@@ -54,6 +54,11 @@ DOCUMENTATION = '''
         description:
           - prefix to apply to cvad groups
         default: cvad_
+      want_tags:
+        description:
+          - Group hosts by tags
+        type: boolean
+        default: True
 '''
 
 EXAMPLES = '''
@@ -117,6 +122,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
         username = self.get_option('username')
         validate_certs = self.get_option('validate_certs')
         group_prefix = self.get_option('group_prefix')
+        want_tags = self.get_option('want_tags')
 
         try:
             cvad_client = CVADClient(
@@ -165,6 +171,15 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
                         ).lower()
                         self.inventory.add_group(group_name)
                         self.inventory.add_child(group_name, host_name)
+
+                # tags
+                if want_tags:
+                    for tag_name in machine.get('Tags', []):
+                        tag_group = to_safe_group_name(
+                            f"{group_prefix}tag_{tag_name}"
+                        ).lower()
+                        self.inventory.add_group(tag_group)
+                        self.inventory.add_child(tag_group, host_name)
 
         except Exception as error:
             raise AnsibleError from error
