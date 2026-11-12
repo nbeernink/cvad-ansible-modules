@@ -26,6 +26,20 @@ releases:
     fragments:
       - add_machine_tags_module.yml
     release_date: '2026-11-03'
+  0.0.13:
+    changes:
+      minor_changes:
+        - Add `machine_filter` option to the inventory plugin
+        - Add `keyed_groups` option to inventory plugin
+        - Add `want_tags` option which groups machines by tags
+        - All hosts in the inventory will be lowercased
+        - Inventory errors will be raised by AnsibleParserError
+    fragments:
+      - add_keyed_groups.yml
+      - add_machine_filter.yml
+      - add_want_tags.yml
+      - misc_fixes.yml
+    release_date: '2026-11-12'
   0.0.4:
     changes:
       bugfixes:
