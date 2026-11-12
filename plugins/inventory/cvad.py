@@ -55,6 +55,11 @@ DOCUMENTATION = '''
         description:
           - prefix to apply to cvad groups
         default: cvad_
+      want_tags:
+        description:
+          - Group hosts by tags
+        type: boolean
+        default: True
       machine_filter:
         description:
           - A search filter dict passed to the C(/Machines/$search) API endpoint.
@@ -282,6 +287,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable, Constructable):
         validate_certs = self.get_option('validate_certs')
         strict = self.get_option('strict')
         group_prefix = self.get_option('group_prefix')
+        want_tags = self.get_option('want_tags')
         machine_filter = self.get_option('machine_filter')
 
         try:
@@ -328,6 +334,15 @@ class InventoryModule(BaseInventoryPlugin, Cacheable, Constructable):
                         ).lower()
                         self.inventory.add_group(group_name)
                         self.inventory.add_child(group_name, host_name)
+
+                # tags
+                if want_tags:
+                    for tag_name in machine.get('Tags', []):
+                        tag_group = to_safe_group_name(
+                            f"{group_prefix}tag_{tag_name}"
+                        ).lower()
+                        self.inventory.add_group(tag_group)
+                        self.inventory.add_child(tag_group, host_name)
 
                 # keyed groups
                 keyed_groups_config = self.get_option('keyed_groups')
