@@ -232,7 +232,7 @@ EXAMPLES = '''
             Value: AgentError
 '''
 
-from ansible.errors import AnsibleError
+from ansible.errors import AnsibleParserError
 from ansible.plugins.inventory import (
     BaseInventoryPlugin,
     Cacheable,
@@ -311,7 +311,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable, Constructable):
             self.inventory.add_group(maintenance_group)
 
             for machine in all_machines:
-                host_name = machine['DnsName']
+                host_name = machine['DnsName'].lower()
                 self.inventory.add_host(host_name)
 
                 if machine['InMaintenanceMode']:
@@ -363,4 +363,4 @@ class InventoryModule(BaseInventoryPlugin, Cacheable, Constructable):
                     )
 
         except Exception as error:
-            raise AnsibleError from error
+            raise AnsibleParserError from error

@@ -1,0 +1,4 @@
+---
+minor_changes:
+  - All hosts in the inventory will be lowercased
+  - Inventory errors will be raised by AnsibleParserError
