@@ -58,8 +58,58 @@ This collection includes an inventory plugin (`nbeernink.cvad.cvad`) that dynami
 - Machine Catalog
 - Maintenance mode status
 
+#### Machine filtering
+
+You can filter out unwanted machines by applying a `machine_filter`. Some examples:
+
+```yaml
+# inventory.cvad.yml
+---
+ddc_server: my-example-ddc.example.com
+username: my-api-user
+password: !vault |
+  your-encrypted-password
+
+# Only return machines matching a free-text search
+machine_filter:
+  BasicSearchString: "example.com"
+
+# Filter by a specific property
+machine_filter:
+  SearchFilters:
+    - Property: OSType
+      Operator: ContainsLike
+      Value: "linux"
+
+# Combine filter groups with OR logic
+machine_filter:
+  SearchFilterGroups:
+    - SearchFilterGroupType: Or
+      SearchFilters:
+        - Property: RegistrationState
+          Operator: Contains
+          Value: Unregistered
+        - Property: RegistrationState
+          Operator: Contains
+          Value: AgentError
+```
+
+##### Tips on how to put together a filter
+
+1. Apply the search in CVAD's webstudio.
+2. Find the logging pane and then switch to the API tab, dig around there to find the API call that performed your search.
+3. Adapt what you see there to a yaml structure like in the example above. (no need to include everything that the webstudio is doing, which for some reason makes "over complicated" requests.)
+4. Run the inventory to see the result. 
+```
+ansible-inventory -i inventory.cvad.yml --graph --ask-vault-pass
+```
+
+Look at the plugin's docs to see which filter options are supported:
+```
+ansible-doc -t inventory nbeernink.cvad.cvad
+```
+
 Planned improvements:
-- Host filters
 - Grouping of unregistered machines (e.g., machines that should be registered but aren't)
 - Keyed groups (custom query-based grouping)
 
