@@ -27,6 +27,7 @@ DOCUMENTATION = '''
         - Get inventory hosts from the CItrix Delivery Controller.
         - Uses a YAML configuration file ending with ``cvad.(yaml|yml)``.
     extends_documentation_fragment:
+      - constructed
       - inventory_cache
     options:
       plugin:
@@ -59,6 +60,137 @@ DOCUMENTATION = '''
           - Group hosts by tags
         type: boolean
         default: True
+      machine_filter:
+        description:
+          - A search filter dict passed to the C(/Machines/$search) API endpoint.
+          - Exactly one of C(BasicSearchString), C(SearchFilters), or
+            C(SearchFilterGroups) must be provided. These modes are mutually
+            exclusive because each triggers a different type of search.
+        type: dict
+        suboptions:
+          BasicSearchString:
+            description: Free-text string matched against machine properties.
+            type: str
+          SearchFilters:
+            description: List of property filters combined with AND logic.
+            type: list
+            elements: dict
+            suboptions:
+              Property:
+                description: The machine property to filter on (e.g. V(OSType)).
+                type: str
+                required: true
+                choices: [
+                  AgentVersion,
+                  AllocationType,
+                  AppState,
+                  AppsInUse,
+                  AzureAdJoinedMode,
+                  ClientIP,
+                  ClientName,
+                  ClientVersion,
+                  CloudPCProvisioningType,
+                  ConnectedViaHostName,
+                  ConnectedViaIP,
+                  ConnectionProtocol,
+                  ConnectorId,
+                  ControllerDnsName,
+                  CriticalIssues,
+                  CurrentUser,
+                  DeliveryGroup,
+                  DnsName,
+                  DrainingUntilShutdown,
+                  FaultState,
+                  FunctionalLevel,
+                  HostedMachineName,
+                  HostingServerName,
+                  HypervisorConnection,
+                  Id,
+                  ImageOutOfDate,
+                  InMaintenanceMode,
+                  IsAssigned,
+                  LastConnectionTime,
+                  LastConnectionUser,
+                  LastDeregistrationReason,
+                  LastDeregistrationTime,
+                  LaunchedViaHostName,
+                  LaunchedViaIP,
+                  LoadIndex,
+                  MachineCatalog,
+                  MachineName,
+                  MachineUnavailableReason,
+                  MaintenanceModeReason,
+                  NonCriticalIssues,
+                  OSType,
+                  OSVersion,
+                  PowerActionPending,
+                  PowerState,
+                  ProvisioningMaintenanceMode,
+                  ProvisioningType,
+                  PublishedName,
+                  RegistrationState,
+                  SecureIcaActive,
+                  SessionCount,
+                  SessionState,
+                  SessionStateChangeTime,
+                  SessionSupport,
+                  SmartAccessFilters,
+                  StartTime,
+                  SummaryState,
+                  SupportedPowerActions,
+                  Tags,
+                  Uid,
+                  UserDisplayName,
+                  UserName,
+                  UserPrincipalName,
+                  VdaUpgrade,
+                  VdaUpgradeState,
+                  WindowsConnectionSetting,
+                  ZoneName,
+                ]
+              Value:
+                description: The value to compare against.
+                type: str
+                required: true
+              Operator:
+                description: Comparison operator.
+                type: str
+                required: true
+                choices: [
+                  Any,
+                  Contains,
+                  ContainsEndsWith,
+                  ContainsLike,
+                  ContainsStartsWith,
+                  EndsWith,
+                  Equals,
+                  GreaterThan,
+                  GreaterThanOrEquals,
+                  In,
+                  IsNotWithin,
+                  IsWithin,
+                  LessThan,
+                  LessThanOrEquals,
+                  Like,
+                  None,
+                  NotContains,
+                  NotContainsEndsWith,
+                  NotContainsLike,
+                  NotContainsStartsWith,
+                  NotEndsWith,
+                  NotEquals,
+                  NotIn,
+                  NotLike,
+                  NotStartsWith,
+                  StartsWith,
+                ]
+          SearchFilterGroups:
+            description: >
+              List of filter group objects. Each group may contain its own
+              C(SearchFilters), a C(SearchFilterGroupType) C(And)|C(Or),
+              and nested SearchFilterGroups for arbitrary depth.
+            type: list
+            elements: dict
 '''
 
 EXAMPLES = '''
@@ -67,18 +199,50 @@ EXAMPLES = '''
   ddc_server: my-example-ddc.example.com
   username: my-api-user
   password: changeme
+
+  keyed_groups:
+    - prefix: cvad
+      key: AgentVersion
+
+    # group by RegistrationState and lowercase the groupname
+    - prefix: cvad
+      key: RegistrationState | lower
+
+  # Only return machines matching a free-text search
+  machine_filter:
+    BasicSearchString: "example.com"
+
+  # Filter by a specific property
+  machine_filter:
+    SearchFilters:
+      - Property: OSType
+        Operator: ContainsLike
+        Value: "linux"
+
+  # Combine filter groups with OR logic
+  machine_filter:
+    SearchFilterGroups:
+      - SearchFilterGroupType: Or
+        SearchFilters:
+          - Property: RegistrationState
+            Operator: Contains
+            Value: Unregistered
+          - Property: RegistrationState
+            Operator: Contains
+            Value: AgentError
 '''
 
 from ansible.errors import AnsibleError
 from ansible.plugins.inventory import (
     BaseInventoryPlugin,
     Cacheable,
+    Constructable,
     to_safe_group_name
 )
 from ansible_collections.nbeernink.cvad.plugins.module_utils.client import CVADClient
 
 
-class InventoryModule(BaseInventoryPlugin, Cacheable):
+class InventoryModule(BaseInventoryPlugin, Cacheable, Constructable):
     """
     Host inventory parser for ansible using Citrix Delivery Controller as source.
     """
@@ -121,8 +285,10 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
         password = self.get_option('password')
         username = self.get_option('username')
         validate_certs = self.get_option('validate_certs')
+        strict = self.get_option('strict')
         group_prefix = self.get_option('group_prefix')
         want_tags = self.get_option('want_tags')
+        machine_filter = self.get_option('machine_filter')
 
         try:
             cvad_client = CVADClient(
@@ -131,18 +297,15 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
                 password=password,
                 validate_certs=validate_certs
             )
-
             cvad_client.login()
 
-            all_machines = cvad_client.get(
-                "/Machines/?fields="
-                "DeliveryGroup,"
-                "DnsName,"
-                "InMaintenanceMode,"
-                "MachineCatalog,"
-                "MachineType,"
-                "PowerState"
-            )
+            if machine_filter is not None:
+                all_machines = cvad_client.post(
+                    "/Machines/$search",
+                    machine_filter
+                )
+            else:
+                all_machines = cvad_client.get('/Machines')
 
             maintenance_group = f"{group_prefix}in_maintenancemode"
             self.inventory.add_group(maintenance_group)
@@ -180,6 +343,24 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
                         ).lower()
                         self.inventory.add_group(tag_group)
                         self.inventory.add_child(tag_group, host_name)
+
+                # keyed groups
+                keyed_groups_config = self.get_option('keyed_groups')
+
+                if keyed_groups_config:
+                    # FIXME: Probably not the best idea to directly map this
+                    # but it seems to work
+                    hostvars = machine
+
+                    for key, val in hostvars.items():
+                        self.inventory.set_variable(host_name, key, val)
+
+                    self._add_host_to_keyed_groups(
+                        keys=keyed_groups_config,
+                        variables=hostvars,
+                        host=host_name,
+                        strict=strict
+                    )
 
         except Exception as error:
             raise AnsibleError from error
