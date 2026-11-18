@@ -1,0 +1,15 @@
+---
+# Connection defaults
+cvad_default_validate_certs: false
+
+# Test user identity defaults (DOMAIN\user or UPN)
+cvad_default_user_1: "EXAMPLE\\TestUser1"
+cvad_default_user_2: "EXAMPLE\\TestUser2"
+
+# Test maintenance mode reason
+cvad_default_maintenance_reason: "Automated Ansible Integration Test"
+
+# Tag fixtures
+cvad_default_tag_1: "AnsibleTestTag1"
+cvad_default_tag_2: "AnsibleTestTag2"
+cvad_default_tag_3: "AnsibleTestTag3"

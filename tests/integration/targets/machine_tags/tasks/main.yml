@@ -1,12 +1,17 @@
 ---
+- name: Prepare test variables
+  ansible.builtin.include_role:
+    name: prepare_test_vars
+
 - name: Test machine_tags module
   module_defaults:
+    group/nbeernink.cvad.cvad:
+      ddc_server: "{{ cvad_connection.ddc_server }}"
+      username: "{{ cvad_connection.username }}"
+      password: "{{ cvad_connection.password }}"
+      validate_certs: "{{ cvad_connection.validate_certs }}"
     nbeernink.cvad.machine_tags:
-      ddc_server: "{{ ddc_server }}"
-      username: "{{ username }}"
-      password: "{{ password }}"
-      validate_certs: "{{ validate_certs }}"
-      machine_name: "{{ machine_name }}"
+      machine_name: "{{ cvad_machine_name }}"
   block:
     # -------------------------------------------------------------
     # 0. Baseline setup: remove all tags

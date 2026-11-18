@@ -1,0 +1,119 @@
+---
+- name: Prepare test variables
+  ansible.builtin.include_role:
+    name: prepare_test_vars
+
+- name: Test delivery_group_machines module
+  module_defaults:
+    group/nbeernink.cvad.cvad:
+      ddc_server: "{{ cvad_connection.ddc_server }}"
+      username: "{{ cvad_connection.username }}"
+      password: "{{ cvad_connection.password }}"
+      validate_certs: "{{ cvad_connection.validate_certs }}"
+    nbeernink.cvad.delivery_group_machines:
+      delivery_group: "{{ cvad_delivery_group }}"
+      machine: "{{ cvad_machine_name }}"
+  block:
+    - name: Assert test machine and delivery group names are provided
+      ansible.builtin.assert:
+        that:
+          - cvad_machine_name is defined
+          - cvad_machine_name | length > 0
+          - cvad_delivery_group is defined
+          - cvad_delivery_group | length > 0
+        fail_msg: "CVAD_TEST_MACHINE and CVAD_TEST_DELIVERY_GROUP must be provided to run delivery_group_machines integration tests"
+
+    # -------------------------------------------------------------
+    # 0. Baseline setup: ensure machine is absent from delivery group
+    # -------------------------------------------------------------
+    - name: "0. Baseline: Ensure machine is absent from delivery group"
+      nbeernink.cvad.delivery_group_machines:
+        state: absent
+      register: baseline_cleanup
+
+    # -------------------------------------------------------------
+    # 1. Add machine to delivery group
+    # -------------------------------------------------------------
+    - name: "1.1. Add machine to delivery group"
+      nbeernink.cvad.delivery_group_machines:
+        state: present
+      register: add_machine_to_dg
+
+    - name: "1.1. Assert machine added to delivery group"
+      ansible.builtin.assert:
+        that:
+          - add_machine_to_dg is changed
+          - "'Added' in add_machine_to_dg.msg"
+        fail_msg: "Failed to add machine to delivery group: {{ add_machine_to_dg }}"
+
+    - name: "1.2. Idempotency: Add machine to delivery group again"
+      nbeernink.cvad.delivery_group_machines:
+        state: present
+      register: add_machine_to_dg_idempotent
+
+    - name: "1.2. Assert adding machine to delivery group again is idempotent"
+      ansible.builtin.assert:
+        that:
+          - add_machine_to_dg_idempotent is not changed
+          - "'already present' in add_machine_to_dg_idempotent.msg"
+        fail_msg: "Adding machine to delivery group again was not idempotent: {{ add_machine_to_dg_idempotent }}"
+
+    # -------------------------------------------------------------
+    # 2. Check mode (Dry run removing machine)
+    # -------------------------------------------------------------
+    - name: "2.1. Test check mode when removing machine from delivery group"
+      nbeernink.cvad.delivery_group_machines:
+        state: absent
+      check_mode: true
+      register: remove_machine_dg_check_mode
+
+    - name: "2.1. Assert check mode indicates change without executing"
+      ansible.builtin.assert:
+        that:
+          - remove_machine_dg_check_mode is changed
+          - "'Would remove' in remove_machine_dg_check_mode.msg"
+        fail_msg: "Check mode failed to report prospective removal: {{ remove_machine_dg_check_mode }}"
+
+    # -------------------------------------------------------------
+    # 3. Remove machine from delivery group
+    # -------------------------------------------------------------
+    - name: "3.1. Remove machine from delivery group"
+      nbeernink.cvad.delivery_group_machines:
+        state: absent
+      register: remove_machine_from_dg
+
+    - name: "3.1. Assert machine removed from delivery group"
+      ansible.builtin.assert:
+        that:
+          - remove_machine_from_dg is changed
+          - "'Removed' in remove_machine_from_dg.msg"
+        fail_msg: "Failed to remove machine from delivery group: {{ remove_machine_from_dg }}"
+
+    - name: "3.2. Idempotency: Remove machine from delivery group again"
+      nbeernink.cvad.delivery_group_machines:
+        state: absent
+      register: remove_machine_from_dg_idempotent
+
+    - name: "3.2. Assert removing machine again is idempotent"
+      ansible.builtin.assert:
+        that:
+          - remove_machine_from_dg_idempotent is not changed
+          - "'already absent' in remove_machine_from_dg_idempotent.msg"
+        fail_msg: "Removing machine from delivery group again was not idempotent: {{ remove_machine_from_dg_idempotent }}"
+
+    # -------------------------------------------------------------
+    # 4. Negative test: non-existent delivery group
+    # -------------------------------------------------------------
+    - name: "4.1. Attempt adding machine to non-existent delivery group"
+      nbeernink.cvad.delivery_group_machines:
+        delivery_group: "non-existent-dg-99999"
+        state: present
+      register: invalid_dg_test
+      ignore_errors: true
+
+    - name: "4.1. Assert non-existent delivery group returns failure"
+      ansible.builtin.assert:
+        that:
+          - invalid_dg_test is failed
+          - "'No item found for search' in invalid_dg_test.msg"
+        fail_msg: "Expected failure for non-existent delivery group but got: {{ invalid_dg_test }}"

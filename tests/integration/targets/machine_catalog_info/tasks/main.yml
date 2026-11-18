@@ -1,0 +1,87 @@
+---
+- name: Prepare test variables
+  ansible.builtin.include_role:
+    name: prepare_test_vars
+
+- name: Test machine_catalog_info module
+  module_defaults:
+    group/nbeernink.cvad.cvad:
+      ddc_server: "{{ cvad_connection.ddc_server }}"
+      username: "{{ cvad_connection.username }}"
+      password: "{{ cvad_connection.password }}"
+      validate_certs: "{{ cvad_connection.validate_certs }}"
+  block:
+    - name: Assert test machine catalog name is provided
+      ansible.builtin.assert:
+        that:
+          - cvad_catalog_name is defined
+          - cvad_catalog_name | length > 0
+        fail_msg: "CVAD_TEST_CATALOG must be provided to run machine_catalog_info integration tests"
+
+    # -------------------------------------------------------------
+    # 1. Query specific machine catalog
+    # -------------------------------------------------------------
+    - name: "1.1. Retrieve information for specific machine catalog"
+      nbeernink.cvad.machine_catalog_info:
+        machine_catalog: "{{ cvad_catalog_name }}"
+      register: get_mc_info
+
+    - name: "1.1. Assert machine catalog info retrieved"
+      ansible.builtin.assert:
+        that:
+          - get_mc_info is not changed
+          - get_mc_info.machine_catalog_info is defined
+          - get_mc_info.machine_catalog_info.Id is defined
+        fail_msg: "Failed to retrieve machine catalog info: {{ get_mc_info }}"
+
+    # -------------------------------------------------------------
+    # 2. Query with field filtering
+    # -------------------------------------------------------------
+    - name: "2.1. Retrieve machine catalog info with specific fields"
+      nbeernink.cvad.machine_catalog_info:
+        machine_catalog: "{{ cvad_catalog_name }}"
+        fields:
+          - Name
+          - Id
+      register: get_mc_filtered
+
+    - name: "2.1. Assert only requested fields are returned"
+      ansible.builtin.assert:
+        that:
+          - get_mc_filtered is not changed
+          - get_mc_filtered.machine_catalog_info is defined
+          - get_mc_filtered.machine_catalog_info.Id is defined
+        fail_msg: "Failed to retrieve filtered machine catalog info: {{ get_mc_filtered }}"
+
+    # -------------------------------------------------------------
+    # 3. Check mode (read-only verification)
+    # -------------------------------------------------------------
+    - name: "3.1. Retrieve machine catalog info with check mode"
+      nbeernink.cvad.machine_catalog_info:
+        machine_catalog: "{{ cvad_catalog_name }}"
+      check_mode: true
+      register: get_mc_check_mode
+
+    - name: "3.1. Assert check mode does not change state and returns info"
+      ansible.builtin.assert:
+        that:
+          - get_mc_check_mode is not changed
+          - get_mc_check_mode.machine_catalog_info is defined
+          - get_mc_check_mode.machine_catalog_info.Id == get_mc_info.machine_catalog_info.Id
+        fail_msg: "Check mode verification failed: {{ get_mc_check_mode }}"
+
+    # -------------------------------------------------------------
+    # 4. Negative test: non-existent machine catalog
+    # -------------------------------------------------------------
+    - name: "4.1. Retrieve info for non-existent machine catalog"
+      nbeernink.cvad.machine_catalog_info:
+        machine_catalog: "non-existent-catalog-99999"
+      register: get_nonexistent_mc
+      ignore_errors: true
+
+    - name: "4.1. Assert non-existent machine catalog returns failure"
+      ansible.builtin.assert:
+        that:
+          - get_nonexistent_mc is failed
+          - "'No item found for search' in get_nonexistent_mc.msg"
+        fail_msg: "Expected failure for non-existent machine catalog but got: {{ get_nonexistent_mc }}"

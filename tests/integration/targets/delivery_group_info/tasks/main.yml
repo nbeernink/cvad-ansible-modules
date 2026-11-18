@@ -1,0 +1,87 @@
+---
+- name: Prepare test variables
+  ansible.builtin.include_role:
+    name: prepare_test_vars
+
+- name: Test delivery_group_info module
+  module_defaults:
+    group/nbeernink.cvad.cvad:
+      ddc_server: "{{ cvad_connection.ddc_server }}"
+      username: "{{ cvad_connection.username }}"
+      password: "{{ cvad_connection.password }}"
+      validate_certs: "{{ cvad_connection.validate_certs }}"
+  block:
+    - name: Assert test delivery group name is provided
+      ansible.builtin.assert:
+        that:
+          - cvad_delivery_group is defined
+          - cvad_delivery_group | length > 0
+        fail_msg: "CVAD_TEST_DELIVERY_GROUP must be provided to run delivery_group_info integration tests"
+
+    # -------------------------------------------------------------
+    # 1. Query specific delivery group
+    # -------------------------------------------------------------
+    - name: "1.1. Retrieve information for specific delivery group"
+      nbeernink.cvad.delivery_group_info:
+        delivery_group: "{{ cvad_delivery_group }}"
+      register: get_dg_info
+
+    - name: "1.1. Assert delivery group info retrieved"
+      ansible.builtin.assert:
+        that:
+          - get_dg_info is not changed
+          - get_dg_info.delivery_group_info is defined
+          - get_dg_info.delivery_group_info.Id is defined
+        fail_msg: "Failed to retrieve delivery group info: {{ get_dg_info }}"
+
+    # -------------------------------------------------------------
+    # 2. Query with field filtering
+    # -------------------------------------------------------------
+    - name: "2.1. Retrieve delivery group info with specific fields"
+      nbeernink.cvad.delivery_group_info:
+        delivery_group: "{{ cvad_delivery_group }}"
+        fields:
+          - FullName
+          - Id
+      register: get_dg_filtered
+
+    - name: "2.1. Assert only requested fields are returned"
+      ansible.builtin.assert:
+        that:
+          - get_dg_filtered is not changed
+          - get_dg_filtered.delivery_group_info is defined
+          - get_dg_filtered.delivery_group_info.Id is defined
+        fail_msg: "Failed to retrieve filtered delivery group info: {{ get_dg_filtered }}"
+
+    # -------------------------------------------------------------
+    # 3. Check mode (read-only verification)
+    # -------------------------------------------------------------
+    - name: "3.1. Retrieve delivery group info with check mode"
+      nbeernink.cvad.delivery_group_info:
+        delivery_group: "{{ cvad_delivery_group }}"
+      check_mode: true
+      register: get_dg_check_mode
+
+    - name: "3.1. Assert check mode does not change state and returns info"
+      ansible.builtin.assert:
+        that:
+          - get_dg_check_mode is not changed
+          - get_dg_check_mode.delivery_group_info is defined
+          - get_dg_check_mode.delivery_group_info.Id == get_dg_info.delivery_group_info.Id
+        fail_msg: "Check mode verification failed: {{ get_dg_check_mode }}"
+
+    # -------------------------------------------------------------
+    # 4. Negative test: non-existent delivery group
+    # -------------------------------------------------------------
+    - name: "4.1. Retrieve info for non-existent delivery group"
+      nbeernink.cvad.delivery_group_info:
+        delivery_group: "non-existent-dg-99999"
+      register: get_nonexistent_dg
+      ignore_errors: true
+
+    - name: "4.1. Assert non-existent delivery group returns failure"
+      ansible.builtin.assert:
+        that:
+          - get_nonexistent_dg is failed
+          - "'No item found for search' in get_nonexistent_dg.msg"
+        fail_msg: "Expected failure for non-existent delivery group but got: {{ get_nonexistent_dg }}"

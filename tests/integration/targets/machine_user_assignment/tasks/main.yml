@@ -1,0 +1,198 @@
+---
+- name: Prepare test variables
+  ansible.builtin.include_role:
+    name: prepare_test_vars
+
+- name: Test machine_user_assignment module
+  module_defaults:
+    group/nbeernink.cvad.cvad:
+      ddc_server: "{{ cvad_connection.ddc_server }}"
+      username: "{{ cvad_connection.username }}"
+      password: "{{ cvad_connection.password }}"
+      validate_certs: "{{ cvad_connection.validate_certs }}"
+    nbeernink.cvad.machine_user_assignment:
+      machine_name: "{{ cvad_machine_name }}"
+    nbeernink.cvad.machine_info:
+      machine_name: "{{ cvad_machine_name }}"
+  block:
+    - name: Assert test machine name is provided
+      ansible.builtin.assert:
+        that:
+          - cvad_machine_name is defined
+          - cvad_machine_name | length > 0
+        fail_msg: "CVAD_TEST_MACHINE must be provided to run machine_user_assignment integration tests"
+
+    # -------------------------------------------------------------
+    # 0. Baseline setup: unassign all users from test machine
+    # -------------------------------------------------------------
+    - name: "0. Baseline: Ensure clean slate by unassigning all users"
+      nbeernink.cvad.machine_user_assignment:
+        state: absent
+      register: baseline_cleanup
+
+    # -------------------------------------------------------------
+    # 1. Assign single user
+    # -------------------------------------------------------------
+    - name: "1.1. Assign single user to machine"
+      nbeernink.cvad.machine_user_assignment:
+        users:
+          - "{{ cvad_test_user_1 }}"
+        state: present
+      register: assign_single
+
+    - name: "1.1. Assert single user assigned successfully"
+      ansible.builtin.assert:
+        that:
+          - assign_single is changed
+          - "'Assigned user(s)' in assign_single.msg"
+          - "cvad_test_user_1 in assign_single.msg"
+        fail_msg: "Failed to assign single user: {{ assign_single }}"
+
+    - name: "1.2. Idempotency: Assign single user again"
+      nbeernink.cvad.machine_user_assignment:
+        users:
+          - "{{ cvad_test_user_1 }}"
+        state: present
+      register: assign_single_idempotent
+
+    - name: "1.2. Assert assigning same user again is idempotent"
+      ansible.builtin.assert:
+        that:
+          - assign_single_idempotent is not changed
+          - "'already assigned' in assign_single_idempotent.msg"
+        fail_msg: "Assigning single user again was not idempotent: {{ assign_single_idempotent }}"
+
+    # -------------------------------------------------------------
+    # 2. Assign multiple users
+    # -------------------------------------------------------------
+    - name: "2.1. Assign multiple users (one existing, one new)"
+      nbeernink.cvad.machine_user_assignment:
+        users:
+          - "{{ cvad_test_user_1 }}"
+          - "{{ cvad_test_user_2 }}"
+        state: present
+      register: assign_multi
+
+    - name: "2.1. Assert second user assigned and first preserved"
+      ansible.builtin.assert:
+        that:
+          - assign_multi is changed
+          - "'Assigned user(s)' in assign_multi.msg"
+          - "cvad_test_user_2 in assign_multi.msg"
+        fail_msg: "Failed to assign multiple users: {{ assign_multi }}"
+
+    - name: "2.2. Idempotency: Assign multiple users again"
+      nbeernink.cvad.machine_user_assignment:
+        users:
+          - "{{ cvad_test_user_1 }}"
+          - "{{ cvad_test_user_2 }}"
+        state: present
+      register: assign_multi_idempotent
+
+    - name: "2.2. Assert assigning multiple users again is idempotent"
+      ansible.builtin.assert:
+        that:
+          - assign_multi_idempotent is not changed
+          - "'already assigned' in assign_multi_idempotent.msg"
+        fail_msg: "Assigning multiple users was not idempotent: {{ assign_multi_idempotent }}"
+
+    # -------------------------------------------------------------
+    # 3. Check mode (Dry run unassigning a user)
+    # -------------------------------------------------------------
+    - name: "3.1. Test check mode when unassigning a user"
+      nbeernink.cvad.machine_user_assignment:
+        users:
+          - "{{ cvad_test_user_1 }}"
+        state: absent
+      check_mode: true
+      register: unassign_check_mode
+
+    - name: "3.1. Assert check mode indicates change without executing"
+      ansible.builtin.assert:
+        that:
+          - unassign_check_mode is changed
+          - "'Would remove assignment' in unassign_check_mode.msg"
+        fail_msg: "Check mode failed to report prospective removal: {{ unassign_check_mode }}"
+
+    # -------------------------------------------------------------
+    # 4. Targeted unassignment
+    # -------------------------------------------------------------
+    - name: "4.1. Unassign specific user"
+      nbeernink.cvad.machine_user_assignment:
+        users:
+          - "{{ cvad_test_user_1 }}"
+        state: absent
+      register: unassign_specific
+
+    - name: "4.1. Assert specific user unassigned"
+      ansible.builtin.assert:
+        that:
+          - unassign_specific is changed
+          - "'Removed assignment for user(s)' in unassign_specific.msg"
+        fail_msg: "Failed to unassign specific user: {{ unassign_specific }}"
+
+    - name: "4.2. Idempotency: Unassign specific user again"
+      nbeernink.cvad.machine_user_assignment:
+        users:
+          - "{{ cvad_test_user_1 }}"
+        state: absent
+      register: unassign_specific_idempotent
+
+    - name: "4.2. Assert unassigning specific user again is idempotent"
+      ansible.builtin.assert:
+        that:
+          - unassign_specific_idempotent is not changed
+          - "'None of the specified user(s)' in unassign_specific_idempotent.msg"
+        fail_msg: "Unassigning specific user was not idempotent: {{ unassign_specific_idempotent }}"
+
+    # -------------------------------------------------------------
+    # 5. Bulk unassignment
+    # -------------------------------------------------------------
+    - name: "5.1. Unassign all remaining users (state=absent without users)"
+      nbeernink.cvad.machine_user_assignment:
+        state: absent
+      register: unassign_all
+
+    - name: "5.1. Assert all remaining users unassigned"
+      ansible.builtin.assert:
+        that:
+          - unassign_all is changed
+          - "'Removed all user assignments' in unassign_all.msg"
+        fail_msg: "Failed to unassign all users: {{ unassign_all }}"
+
+    - name: "5.2. Idempotency: Unassign all users again (clean state)"
+      nbeernink.cvad.machine_user_assignment:
+        state: absent
+      register: unassign_all_idempotent
+
+    - name: "5.2. Assert unassigning all users again is idempotent"
+      ansible.builtin.assert:
+        that:
+          - unassign_all_idempotent is not changed
+          - "'has no assigned users' in unassign_all_idempotent.msg"
+        fail_msg: "Unassigning all users again was not idempotent: {{ unassign_all_idempotent }}"
+
+    # -------------------------------------------------------------
+    # 6. Parameter validation test
+    # -------------------------------------------------------------
+    - name: "6.1. Attempt state=present without users list"
+      nbeernink.cvad.machine_user_assignment:
+        state: present
+      register: missing_users_test
+      ignore_errors: true
+
+    - name: "6.1. Assert state=present requires users parameter"
+      ansible.builtin.assert:
+        that:
+          - missing_users_test is failed
+          - "'state is present but any of the following are missing' in missing_users_test.msg or 'users' in missing_users_test.msg"
+        fail_msg: "Expected validation failure for missing users but got: {{ missing_users_test }}"
+
+  always:
+    # -------------------------------------------------------------
+    # 7. Teardown: ensure clean slate
+    # -------------------------------------------------------------
+    - name: "7.1. Teardown: Clear all assigned users"
+      nbeernink.cvad.machine_user_assignment:
+        state: absent
+      ignore_errors: true

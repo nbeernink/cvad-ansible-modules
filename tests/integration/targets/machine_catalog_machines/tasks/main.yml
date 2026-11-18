@@ -1,0 +1,119 @@
+---
+- name: Prepare test variables
+  ansible.builtin.include_role:
+    name: prepare_test_vars
+
+- name: Test machine_catalog_machines module
+  module_defaults:
+    group/nbeernink.cvad.cvad:
+      ddc_server: "{{ cvad_connection.ddc_server }}"
+      username: "{{ cvad_connection.username }}"
+      password: "{{ cvad_connection.password }}"
+      validate_certs: "{{ cvad_connection.validate_certs }}"
+    nbeernink.cvad.machine_catalog_machines:
+      machine_catalog: "{{ cvad_catalog_name }}"
+      machine_name: "{{ cvad_catalog_machine_name }}"
+  block:
+    - name: Assert test machine account and catalog names are provided
+      ansible.builtin.assert:
+        that:
+          - cvad_catalog_name is defined
+          - cvad_catalog_name | length > 0
+          - cvad_catalog_machine_name is defined
+          - cvad_catalog_machine_name | length > 0
+        fail_msg: "CVAD_TEST_CATALOG and CVAD_TEST_CATALOG_MACHINE must be provided to run machine_catalog_machines integration tests"
+
+    # -------------------------------------------------------------
+    # 0. Baseline setup: ensure machine is absent from catalog
+    # -------------------------------------------------------------
+    - name: "0. Baseline: Ensure machine is absent from catalog"
+      nbeernink.cvad.machine_catalog_machines:
+        state: absent
+      register: baseline_cleanup
+
+    # -------------------------------------------------------------
+    # 1. Add machine to machine catalog
+    # -------------------------------------------------------------
+    - name: "1.1. Add machine to machine catalog"
+      nbeernink.cvad.machine_catalog_machines:
+        state: present
+      register: add_machine_to_mc
+
+    - name: "1.1. Assert machine added to machine catalog"
+      ansible.builtin.assert:
+        that:
+          - add_machine_to_mc is changed
+          - "'Added' in add_machine_to_mc.msg"
+        fail_msg: "Failed to add machine to machine catalog: {{ add_machine_to_mc }}"
+
+    - name: "1.2. Idempotency: Add machine to machine catalog again"
+      nbeernink.cvad.machine_catalog_machines:
+        state: present
+      register: add_machine_to_mc_idempotent
+
+    - name: "1.2. Assert adding machine to catalog again is idempotent"
+      ansible.builtin.assert:
+        that:
+          - add_machine_to_mc_idempotent is not changed
+          - "'already present' in add_machine_to_mc_idempotent.msg"
+        fail_msg: "Adding machine to machine catalog again was not idempotent: {{ add_machine_to_mc_idempotent }}"
+
+    # -------------------------------------------------------------
+    # 2. Check mode (Dry run removing machine)
+    # -------------------------------------------------------------
+    - name: "2.1. Test check mode when removing machine from catalog"
+      nbeernink.cvad.machine_catalog_machines:
+        state: absent
+      check_mode: true
+      register: remove_machine_mc_check_mode
+
+    - name: "2.1. Assert check mode indicates change without executing"
+      ansible.builtin.assert:
+        that:
+          - remove_machine_mc_check_mode is changed
+          - "'Would remove' in remove_machine_mc_check_mode.msg"
+        fail_msg: "Check mode failed to report prospective removal: {{ remove_machine_mc_check_mode }}"
+
+    # -------------------------------------------------------------
+    # 3. Remove machine from machine catalog
+    # -------------------------------------------------------------
+    - name: "3.1. Remove machine from machine catalog"
+      nbeernink.cvad.machine_catalog_machines:
+        state: absent
+      register: remove_machine_from_mc
+
+    - name: "3.1. Assert machine removed from machine catalog"
+      ansible.builtin.assert:
+        that:
+          - remove_machine_from_mc is changed
+          - "'Removed' in remove_machine_from_mc.msg"
+        fail_msg: "Failed to remove machine from machine catalog: {{ remove_machine_from_mc }}"
+
+    - name: "3.2. Idempotency: Remove machine from machine catalog again"
+      nbeernink.cvad.machine_catalog_machines:
+        state: absent
+      register: remove_machine_from_mc_idempotent
+
+    - name: "3.2. Assert removing machine again is idempotent"
+      ansible.builtin.assert:
+        that:
+          - remove_machine_from_mc_idempotent is not changed
+          - "'already absent' in remove_machine_from_mc_idempotent.msg"
+        fail_msg: "Removing machine from catalog again was not idempotent: {{ remove_machine_from_mc_idempotent }}"
+
+    # -------------------------------------------------------------
+    # 4. Negative test: non-existent machine catalog
+    # -------------------------------------------------------------
+    - name: "4.1. Attempt adding machine to non-existent machine catalog"
+      nbeernink.cvad.machine_catalog_machines:
+        machine_catalog: "non-existent-catalog-99999"
+        state: present
+      register: invalid_mc_test
+      ignore_errors: true
+
+    - name: "4.1. Assert non-existent machine catalog returns failure"
+      ansible.builtin.assert:
+        that:
+          - invalid_mc_test is failed
+          - "'No item found for search' in invalid_mc_test.msg"
+        fail_msg: "Expected failure for non-existent machine catalog but got: {{ invalid_mc_test }}"

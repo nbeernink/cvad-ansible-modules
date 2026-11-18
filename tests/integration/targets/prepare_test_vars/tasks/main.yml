@@ -1,0 +1,85 @@
+---
+- name: Look up CVAD environment variables
+  ansible.builtin.set_fact:
+    cvad_server_raw: "{{ cvad_server | default(lookup('env', 'CVAD_DDC_SERVER')) }}"
+    cvad_user_raw: "{{ cvad_user | default(lookup('env', 'CVAD_USERNAME')) }}"
+    cvad_pass_raw: "{{ cvad_password | default(lookup('env', 'CVAD_PASSWORD')) }}"
+    cvad_certs_raw: "{{ cvad_validate_certs | default(lookup('env', 'CVAD_VALIDATE_CERTS')) }}"
+    cvad_machine_raw: "{{ cvad_machine | default(lookup('env', 'CVAD_TEST_MACHINE')) }}"
+    cvad_catalog_raw: "{{ cvad_catalog | default(lookup('env', 'CVAD_TEST_CATALOG')) }}"
+    cvad_catalog_machine_raw: "{{ cvad_catalog_machine | default(lookup('env', 'CVAD_TEST_CATALOG_MACHINE')) }}"
+    cvad_delivery_group_raw: "{{ cvad_delivery_group_name | default(lookup('env', 'CVAD_TEST_DELIVERY_GROUP')) }}"
+    cvad_user1_raw: "{{ cvad_user_1 | default(lookup('env', 'CVAD_TEST_USER_1')) }}"
+    cvad_user2_raw: "{{ cvad_user_2 | default(lookup('env', 'CVAD_TEST_USER_2')) }}"
+  no_log: true
+
+- name: Validate mandatory CVAD connection parameters
+  ansible.builtin.assert:
+    that:
+      - cvad_server_raw is defined and cvad_server_raw | length > 0
+      - cvad_user_raw is defined and cvad_user_raw | length > 0
+      - cvad_pass_raw is defined and cvad_pass_raw | length > 0
+    fail_msg: >-
+      Mandatory environment variables missing! Please export CVAD_DDC_SERVER,
+      CVAD_USERNAME, and CVAD_PASSWORD before running integration tests.
+
+- name: Construct and register normalized test facts
+  ansible.builtin.set_fact:
+    # Common connection dictionary usable across all module calls
+    cvad_connection:
+      ddc_server: "{{ cvad_server_raw }}"
+      username: "{{ cvad_user_raw }}"
+      password: "{{ cvad_pass_raw }}"
+      validate_certs: "{{ (cvad_certs_raw if (cvad_certs_raw is defined and cvad_certs_raw != '') else cvad_default_validate_certs) | bool }}"
+
+    # Primary connection variables for backwards compatibility
+    ddc_server: "{{ cvad_server_raw }}"
+    username: "{{ cvad_user_raw }}"
+    password: "{{ cvad_pass_raw }}"
+    validate_certs: "{{ (cvad_certs_raw if (cvad_certs_raw is defined and cvad_certs_raw != '') else cvad_default_validate_certs) | bool }}"
+
+    # Test machine
+    cvad_machine_name: "{{ cvad_machine_raw }}"
+    machine_name: "{{ cvad_machine_raw }}"
+
+    # Test catalog and delivery group
+    cvad_catalog_name: "{{ cvad_catalog_raw }}"
+    cvad_catalog_machine_name: "{{ cvad_catalog_machine_raw }}"
+    cvad_delivery_group: "{{ cvad_delivery_group_raw }}"
+
+    # User identities for machine_user_assignment
+    cvad_test_user_1: "{{ cvad_user1_raw if (cvad_user1_raw is defined and cvad_user1_raw != '') else cvad_default_user_1 }}"
+    cvad_test_user_2: "{{ cvad_user2_raw if (cvad_user2_raw is defined and cvad_user2_raw != '') else cvad_default_user_2 }}"
+
+    # Machine maintenance mode fixture
+    cvad_maintenance_reason: "{{ cvad_default_maintenance_reason }}"
+
+    # Reusable tag sets
+    cvad_tags_single:
+      - "{{ cvad_default_tag_1 }}"
+    cvad_tags_multiple:
+      - "{{ cvad_default_tag_1 }}"
+      - "{{ cvad_default_tag_2 }}"
+    cvad_tags_purge:
+      - "{{ cvad_default_tag_1 }}"
+      - "{{ cvad_default_tag_3 }}"
+
+    # Backwards compatibility tag variables
+    single_tag:
+      - "{{ cvad_default_tag_1 }}"
+    multiple_tags:
+      - "{{ cvad_default_tag_1 }}"
+      - "{{ cvad_default_tag_2 }}"
+    purge_tags:
+      - "{{ cvad_default_tag_1 }}"
+      - "{{ cvad_default_tag_3 }}"
+  no_log: true
+
+- name: Display non-sensitive test configuration summary
+  ansible.builtin.debug:
+    msg:
+      ddc_server: "{{ cvad_connection.ddc_server }}"
+      validate_certs: "{{ cvad_connection.validate_certs }}"
+      machine_name: "{{ cvad_machine_name }}"
+      catalog_name: "{{ cvad_catalog_name }}"
+      delivery_group: "{{ cvad_delivery_group }}"

@@ -1,0 +1,69 @@
+---
+- name: Prepare test variables
+  ansible.builtin.include_role:
+    name: prepare_test_vars
+
+- name: Test machine_info module
+  module_defaults:
+    group/nbeernink.cvad.cvad:
+      ddc_server: "{{ cvad_connection.ddc_server }}"
+      username: "{{ cvad_connection.username }}"
+      password: "{{ cvad_connection.password }}"
+      validate_certs: "{{ cvad_connection.validate_certs }}"
+    nbeernink.cvad.machine_info:
+      machine_name: "{{ cvad_machine_name }}"
+  block:
+    - name: Assert test machine name is provided
+      ansible.builtin.assert:
+        that:
+          - cvad_machine_name is defined
+          - cvad_machine_name | length > 0
+        fail_msg: "CVAD_TEST_MACHINE must be provided to run machine_info integration tests"
+
+    # -------------------------------------------------------------
+    # 1. Retrieve machine information
+    # -------------------------------------------------------------
+    - name: "1.1. Retrieve information for existing machine"
+      nbeernink.cvad.machine_info:
+      register: get_machine_info
+
+    - name: "1.1. Assert machine info retrieved successfully"
+      ansible.builtin.assert:
+        that:
+          - get_machine_info is not changed
+          - get_machine_info.machine_info is defined
+          - get_machine_info.machine_info.Id is defined
+          - (get_machine_info.machine_info.DnsName | lower) == (cvad_machine_name | lower) or (get_machine_info.machine_info.Name | lower) == (cvad_machine_name | lower)
+        fail_msg: "Failed to retrieve valid machine info: {{ get_machine_info }}"
+
+    # -------------------------------------------------------------
+    # 2. Check mode test (read-only verification)
+    # -------------------------------------------------------------
+    - name: "2.1. Retrieve machine info with check_mode"
+      nbeernink.cvad.machine_info:
+      check_mode: true
+      register: get_machine_info_check_mode
+
+    - name: "2.1. Assert check mode does not change state and returns info"
+      ansible.builtin.assert:
+        that:
+          - get_machine_info_check_mode is not changed
+          - get_machine_info_check_mode.machine_info is defined
+          - get_machine_info_check_mode.machine_info.Id == get_machine_info.machine_info.Id
+        fail_msg: "Check mode verification failed: {{ get_machine_info_check_mode }}"
+
+    # -------------------------------------------------------------
+    # 3. Negative test: non-existent machine
+    # -------------------------------------------------------------
+    - name: "3.1. Retrieve machine info for non-existent machine"
+      nbeernink.cvad.machine_info:
+        machine_name: "non-existent-vm-99999.example.com"
+      register: get_nonexistent_machine
+      ignore_errors: true
+
+    - name: "3.1. Assert non-existent machine returns failure"
+      ansible.builtin.assert:
+        that:
+          - get_nonexistent_machine is failed
+          - "'No item found for search' in get_nonexistent_machine.msg"
+        fail_msg: "Expected failure for non-existent machine but got: {{ get_nonexistent_machine }}"
