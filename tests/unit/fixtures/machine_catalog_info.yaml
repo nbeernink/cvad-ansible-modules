@@ -1,0 +1,333 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/Tokens
+  response:
+    body:
+      string: |-
+        {
+          "Token": "MOCKED_BEARER_TOKEN",
+          "Principal": "unit-tester",
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "CustomerId": "CitrixOnPremises",
+          "ExpiresAt": "2026-11-21T21:32:21Z"
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '1000'
+      Connection:
+      - close
+      Content-Length:
+      - '201'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/Me
+  response:
+    body:
+      string: |-
+        {
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "DisplayName": "",
+          "ExpiryTime": "2026-11-21T21:32:21Z",
+          "RefreshExpirationTime": "2026-11-22T20:32:21Z",
+          "VerifiedEmail": null,
+          "IsCspCustomer": false,
+          "Customers": [
+            {
+              "Id": "CitrixOnPremises",
+              "Name": null,
+              "Sites": [
+                {
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "Name": "TESTSITE"
+                }
+              ]
+            }
+          ]
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '1100'
+      Connection:
+      - close
+      Content-Length:
+      - '441'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/MachineCatalogs/00000000-0000-0000-0000-000000000020?fields=
+  response:
+    body:
+      string: |-
+        {
+          "AgentVersion": "-",
+          "HypervisorConnection": null,
+          "OSType": "-",
+          "OSVersion": "-",
+          "DeliveryGroups": [],
+          "UpgradeDetail": null,
+          "Name": "ansible_testing",
+          "FullName": "ansible_testing",
+          "Id": "00000000-0000-0000-0000-000000000020",
+          "Uid": 14,
+          "AllocationType": "Static",
+          "AssignedCount": 0,
+          "AvailableAssignedCount": 0,
+          "AvailableCount": 0,
+          "AvailableUnassignedCount": 0,
+          "Description": null,
+          "IsPowerManaged": true,
+          "IsRemotePC": false,
+          "JobsInProgress": null,
+          "MachineType": "Virtual",
+          "Metadata": [],
+          "MinimumFunctionalLevel": "L7_9",
+          "HasBeenPromoted": false,
+          "HasBeenPromotedFrom": "Unknown",
+          "CanRollbackVMImage": false,
+          "CanRecreateCatalog": false,
+          "PersistChanges": "OnLocal",
+          "ProvisioningScheme": null,
+          "ProvisioningType": "Manual",
+          "ProvisioningProgress": null,
+          "PvsAddress": null,
+          "PvsDomain": null,
+          "RemotePCEnrollmentScopes": null,
+          "Scopes": [
+            {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "Uid": null,
+              "Name": "All",
+              "Description": null,
+              "IsBuiltIn": true,
+              "IsAllScope": true,
+              "IsTenantScope": false,
+              "TenantId": null,
+              "TenantName": null
+            }
+          ],
+          "Tenants": null,
+          "SessionSupport": "SingleSession",
+          "SharingKind": "Unknown",
+          "TotalCount": 0,
+          "IsBroken": false,
+          "IsMasterImageAssociated": null,
+          "ImageUpdateStatus": "Unknown",
+          "Errors": [],
+          "Warnings": [],
+          "UnassignedCount": 0,
+          "UsedCount": 0,
+          "AvailableCountOfSuspend": null,
+          "AvailableAssignedCountOfSuspend": null,
+          "UpgradeInfo": null,
+          "Zone": {
+            "Id": "00000000-0000-0000-0000-000000000040",
+            "Uid": null,
+            "Name": "Primary"
+          },
+          "AdminFolder": {
+            "Id": "0",
+            "Uid": 0,
+            "Name": ""
+          }
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '4200'
+      Connection:
+      - close
+      Content-Length:
+      - '1739'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"BasicSearchString": "ansible_testing"}'
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Length:
+      - '40'
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/MachineCatalogs/$search?fields=Id
+  response:
+    body:
+      string: |-
+        {
+          "Items": [
+            {
+              "Id": "00000000-0000-0000-0000-000000000020"
+            }
+          ],
+          "TotalItems": 1
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '200'
+      Connection:
+      - close
+      Content-Length:
+      - '102'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/MachineCatalogs/00000000-0000-0000-0000-000000000020?fields=Name,Id
+  response:
+    body:
+      string: |-
+        {
+          "Name": "ansible_testing",
+          "Id": "00000000-0000-0000-0000-000000000020"
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '3800'
+      Connection:
+      - close
+      Content-Length:
+      - '79'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -243,7 +243,7 @@ Example usage:
 - [x] Dynamic inventory plugin
 - [x] Automated linting / ansible-test
 
-For testing, the goal is to eventually add recorded HTTP interaction tests using [vcrpy](https://vcrpy.readthedocs.io/), allowing the collection to be tested without a live CVAD environment by replaying pre-recorded API cassettes.
+For testing, see `docs/testing.md`
 
 ---
 

@@ -1,0 +1,294 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/Tokens
+  response:
+    body:
+      string: |-
+        {
+          "Token": "MOCKED_BEARER_TOKEN",
+          "Principal": "unit-tester",
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "CustomerId": "CitrixOnPremises",
+          "ExpiresAt": "2026-11-21T21:36:51Z"
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '1000'
+      Connection:
+      - close
+      Content-Length:
+      - '201'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/Me
+  response:
+    body:
+      string: |-
+        {
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "DisplayName": "",
+          "ExpiryTime": "2026-11-21T21:36:51Z",
+          "RefreshExpirationTime": "2026-11-22T20:36:51Z",
+          "VerifiedEmail": null,
+          "IsCspCustomer": false,
+          "Customers": [
+            {
+              "Id": "CitrixOnPremises",
+              "Name": null,
+              "Sites": [
+                {
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "Name": "TESTSITE"
+                }
+              ]
+            }
+          ]
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '1100'
+      Connection:
+      - close
+      Content-Length:
+      - '441'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"BasicSearchString": "test-catalog1"}'
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Length:
+      - '43'
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/MachineCatalogs/$search?fields=Id
+  response:
+    body:
+      string: |-
+        {
+          "Items": [
+            {
+              "Id": "00000000-0000-0000-0000-000000000020"
+            }
+          ],
+          "TotalItems": 1
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '200'
+      Connection:
+      - close
+      Content-Length:
+      - '102'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/MachineCatalogs/00000000-0000-0000-0000-000000000020/Machines
+  response:
+    body:
+      string: |-
+        {
+          "Items": []
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '9500'
+      Connection:
+      - close
+      Content-Length:
+      - '17'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"MachineName": "EXAMPLE\\TEST-VM1"}'
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Length:
+      - '35'
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/MachineCatalogs/00000000-0000-0000-0000-000000000020/Machines
+  response:
+    body:
+      string: |-
+        {
+          "Id": "c2358a17-f448-41bb-b027-5f69ed2c2164",
+          "Type": "AddMachineCatalogMachine",
+          "OverallProgressPercent": 100,
+          "IsCancellable": true,
+          "Parameters": [
+            {
+              "Name": "NameOrId",
+              "Value": "00000000-0000-0000-0000-000000000020"
+            },
+            {
+              "Name": "request",
+              "Value": "{\"PvsAddress\":null,\"PvsDomain\":null,\"PvsCollectionIds\":null,\"MachineAccountCreationRules\":null,\"AddAvailableMachineAccount\":null,\"MachineName\":\"EXAMPLE\\\\TEST-VM1\",\"AssignedClientName\":null,\"AssignedIPAddress\":null,\"AssignedUsers\":null,\"HostedMachineId\":null,\"HypervisorConnection\":null,\"InMaintenanceMode\":null,\"Metadata\":null}"
+            },
+            {
+              "Name": "ProgressDescriptionContents",
+              "Value": "Adding machines"
+            }
+          ],
+          "SubJobs": [],
+          "Status": "Complete",
+          "ResultLocation": "/MachineCatalogs/00000000-0000-0000-0000-000000000020",
+          "ErrorString": null,
+          "ErrorCode": "Unknown",
+          "ErrorParameters": [],
+          "CreationTime": "2026-11-21T20:36:51.910+01:00",
+          "FormattedCreationTime": "2026-11-21T20:36:51Z",
+          "StartTime": "2026-11-21T20:36:51.926+01:00",
+          "FormattedStartTime": "2026-11-21T20:36:51Z",
+          "EndTime": "2026-11-21T20:36:52.489+01:00",
+          "FormattedEndTime": "2026-11-21T20:36:52Z"
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '32900'
+      Connection:
+      - close
+      Content-Length:
+      - '1247'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+version: 1

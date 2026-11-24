@@ -1,0 +1,4 @@
+pytest
+pytest-mock
+pytest-recording
+pytest-xdist
