@@ -1,0 +1,5 @@
+---
+bugfixes:
+  - |-
+    Fix `delivery_group_machines`-module failing to look up machines in a delivery group with a space in the name
+    https://github.com/nbeernink/cvad-ansible-modules/issues/21
