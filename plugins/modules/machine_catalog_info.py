@@ -107,11 +107,11 @@ def run_module():
 
         if catalog_name:
             machine_catalog_info = cvad_client.get(
-                f"/MachineCatalogs/{catalog_id}?fields={return_fields}"
+                f"MachineCatalogs/{catalog_id}?fields={return_fields}"
             )
         else:
             machine_catalog_info = cvad_client.get(
-                f"/MachineCatalogs?fields={return_fields}"
+                f"MachineCatalogs?fields={return_fields}"
             )
 
         module.exit_json(changed=False, machine_catalog_info=machine_catalog_info)

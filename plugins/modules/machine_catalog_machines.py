@@ -118,7 +118,7 @@ def run_module():
         catalog_id = cvad_client.find_machine_catalog_by_id(catalog_name)
 
         # Get list of machines in machine catalog
-        machines = cvad_client.get(f"/MachineCatalogs/{catalog_id}/Machines")
+        machines = cvad_client.get(f"MachineCatalogs/{catalog_id}/Machines")
 
         # Check if machine is already in catalog
         # The API typically returns Name (which is DOMAIN\MACHINENAME)
@@ -134,7 +134,7 @@ def run_module():
         if state == 'absent' and machine_in_catalog:
             if not module.check_mode:
                 cvad_client.delete(
-                    f"/MachineCatalogs/{catalog_id}/Machines/{machine_id}"
+                    f"MachineCatalogs/{catalog_id}/Machines/{machine_id}"
                 )
                 msg = f"Removed {machine_name} from {catalog_name}"
                 changed = True
@@ -145,7 +145,7 @@ def run_module():
         elif state == 'present' and not machine_in_catalog:
             if not module.check_mode:
                 cvad_client.post(
-                    f"/MachineCatalogs/{catalog_id}/Machines",
+                    f"MachineCatalogs/{catalog_id}/Machines",
                     data={
                         "MachineName": machine_name
                     }

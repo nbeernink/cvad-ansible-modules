@@ -110,12 +110,12 @@ def run_module():
         reason = module.params['reason']
         state = module.params['state']
 
-        machine_info = cvad_client.get(f"/Machines/{machine_id}")
+        machine_info = cvad_client.get(f"Machines/{machine_id}")
 
         if machine_info['InMaintenanceMode'] and state == 'off':
             if not module.check_mode:
                 cvad_client.patch(
-                    f"/Machines/{machine_id}",
+                    f"Machines/{machine_id}",
                     data={'InMaintenanceMode': 'False'}
                 )
             msg = f"Machine '{machine_name}' exited maintenance mode."
@@ -130,7 +130,7 @@ def run_module():
 
             if not module.check_mode:
                 cvad_client.patch(
-                    f"/Machines/{machine_id}",
+                    f"Machines/{machine_id}",
                     data=payload
                 )
             msg = f"Machine '{machine_name}' entered maintenance mode."
