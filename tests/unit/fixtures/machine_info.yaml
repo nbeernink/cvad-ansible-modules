@@ -1,0 +1,173 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/Tokens
+  response:
+    body:
+      string: |-
+        {
+          "Token": "MOCKED_BEARER_TOKEN",
+          "Principal": "unit-tester",
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "CustomerId": "CitrixOnPremises",
+          "ExpiresAt": "2026-11-21T21:30:00Z"
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Connection:
+      - close
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/Me
+  response:
+    body:
+      string: |-
+        {
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "DisplayName": "",
+          "ExpiryTime": "2026-11-21T21:30:00Z",
+          "RefreshExpirationTime": "2026-11-22T20:30:00Z",
+          "VerifiedEmail": null,
+          "IsCspCustomer": false,
+          "Customers": [
+            {
+              "Id": "CitrixOnPremises",
+              "Name": null,
+              "Sites": [
+                {
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "Name": "TESTSITE"
+                }
+              ]
+            }
+          ]
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Connection:
+      - close
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"BasicSearchString": "test-vm1.example.org"}'
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Content-Type:
+      - application/json
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/Machines/$search?fields=Id
+  response:
+    body:
+      string: |-
+        {
+          "Items": [
+            {
+              "Id": "00000000-0000-0000-0000-000000000001"
+            }
+          ],
+          "TotalItems": 1
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Connection:
+      - close
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Content-Type:
+      - application/json
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/Machines/00000000-0000-0000-0000-000000000001
+  response:
+    body:
+      string: |-
+        {
+          "Id": "00000000-0000-0000-0000-000000000001",
+          "Name": "EXAMPLE\\TEST-VM1",
+          "DnsName": "test-vm1.example.org",
+          "Sid": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "InMaintenanceMode": false,
+          "PowerState": "Unmanaged",
+          "RegistrationState": "Unregistered",
+          "Tags": [
+            "AnsibleTestTag1"
+          ]
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Connection:
+      - close
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -1,0 +1,701 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/Tokens
+  response:
+    body:
+      string: |-
+        {
+          "Token": "MOCKED_BEARER_TOKEN",
+          "Principal": "unit-tester",
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "CustomerId": "CitrixOnPremises",
+          "ExpiresAt": "2026-11-21T21:32:12Z"
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '1000'
+      Connection:
+      - close
+      Content-Length:
+      - '201'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/Me
+  response:
+    body:
+      string: |-
+        {
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "DisplayName": "",
+          "ExpiryTime": "2026-11-21T21:32:12Z",
+          "RefreshExpirationTime": "2026-11-22T20:32:12Z",
+          "VerifiedEmail": null,
+          "IsCspCustomer": false,
+          "Customers": [
+            {
+              "Id": "CitrixOnPremises",
+              "Name": null,
+              "Sites": [
+                {
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "Name": "TESTSITE"
+                }
+              ]
+            }
+          ]
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '1100'
+      Connection:
+      - close
+      Content-Length:
+      - '441'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/DeliveryGroups?fields=
+  response:
+    body:
+      string: |-
+        {
+          "Items": [
+            {
+              "Id": "00000000-0000-0000-0000-000000000010",
+              "Uid": 3,
+              "UserManagement": "Studio",
+              "Delivering": "Unknown",
+              "DeliveryType": "DesktopsOnly",
+              "Description": null,
+              "DesktopsAvailable": 0,
+              "DesktopsDisconnected": 0,
+              "DesktopsFaulted": 0,
+              "DesktopsUnregistered": 1,
+              "Enabled": true,
+              "HasBeenPromoted": false,
+              "HasBeenPromotedFrom": "Unknown",
+              "InMaintenanceMode": false,
+              "IsBroken": false,
+              "IsRemotePC": true,
+              "MachineLogOnType": "ActiveDirectory",
+              "Metadata": [],
+              "MinimumFunctionalLevel": "L7_9",
+              "Name": "test-group1",
+              "FullName": "test-group1",
+              "PublishedName": "test-group1",
+              "PolicySetGuid": "00000000-0000-0000-0000-000000000000",
+              "ProductCode": null,
+              "LicenseModel": null,
+              "RequireUserHomeZone": false,
+              "Scopes": [
+                {
+                  "Id": "00000000-0000-0000-0000-000000000000",
+                  "Uid": null,
+                  "Name": "All",
+                  "Description": null,
+                  "IsBuiltIn": true,
+                  "IsAllScope": true,
+                  "IsTenantScope": false,
+                  "TenantId": null,
+                  "TenantName": null
+                }
+              ],
+              "Tenants": null,
+              "Tags": null,
+              "SessionCount": 0,
+              "SessionSupport": "SingleSession",
+              "SharingKind": "Private",
+              "TotalApplications": 0,
+              "TotalDesktops": 1,
+              "ApplicationGroupCompatibility": "Unknown",
+              "ApplicationCompatibility": "Unknown",
+              "DesktopCompatibility": "Unknown",
+              "RequiredSleepCapability": "None",
+              "AdminFolder": {
+                "Id": "0",
+                "Uid": 0,
+                "Name": ""
+              },
+              "IsPowerManaged": false,
+              "AutoscalingEnabled": false,
+              "ReuseMachinesWithoutShutdownInOutage": false,
+              "TotalDesktopsOfSuspend": null
+            }
+          ],
+          "TotalItems": 1
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '9200'
+      Connection:
+      - close
+      Content-Length:
+      - '1864'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"BasicSearchString": "test-group1"}'
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Length:
+      - '43'
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/DeliveryGroups/$search?fields=Id
+  response:
+    body:
+      string: |-
+        {
+          "Items": [
+            {
+              "Id": "00000000-0000-0000-0000-000000000010"
+            }
+          ],
+          "TotalItems": 1
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '200'
+      Connection:
+      - close
+      Content-Length:
+      - '102'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/DeliveryGroups/00000000-0000-0000-0000-000000000010?fields=
+  response:
+    body:
+      string: |-
+        {
+          "AppAccessPolicy": null,
+          "AppProtectionKeyLoggingRequired": false,
+          "AppProtectionScreenCaptureRequired": false,
+          "AutomaticPowerOnForAssigned": true,
+          "AutomaticPowerOnForAssignedDuringPeak": false,
+          "AutoScaleEnabled": false,
+          "RestrictAutoscaleTag": null,
+          "ColorDepth": "TwentyFourBit",
+          "DefaultDesktopIconId": "1",
+          "DefaultDesktopPublishedName": "test-group1",
+          "DesktopsInUse": 0,
+          "DesktopsNeverRegistered": 1,
+          "DesktopsPreparing": 0,
+          "HdxSslEnabled": null,
+          "LingerSettings": {
+            "Enabled": false,
+            "MaxAverageLoadThreshold": 0,
+            "MaxLoadPerMachineThreshold": 0,
+            "MaxTimeBeforeDisconnectMinutes": 15,
+            "MaxTimeBeforeTerminateMinutes": 480,
+            "IncludedUserFilterEnabled": false,
+            "IncludedUsers": []
+          },
+          "PowerOffDelayMinutes": 30,
+          "MachineCost": 0.0,
+          "MachinesInMaintenanceMode": 0,
+          "MachineOperatingSystems": [
+            {
+              "Name": "Unknown",
+              "Value": 1
+            }
+          ],
+          "MachineType": "Unknown",
+          "OffMachines": 0,
+          "OffPeakBufferSizePercent": 10,
+          "OffPeakDisconnectAction": "Nothing",
+          "OffPeakDisconnectTimeoutMinutes": 0,
+          "OffPeakExtendedDisconnectAction": "Nothing",
+          "OffPeakExtendedDisconnectTimeoutMinutes": 0,
+          "OffPeakLogOffAction": "Nothing",
+          "OffPeakLogOffTimeoutMinutes": 0,
+          "PeakAutoscaleAssignedPowerOnIdleTimeoutMinutes": 0,
+          "PeakAutoscaleAssignedPowerOnIdleAction": "Nothing",
+          "PeakBufferSizePercent": 10,
+          "PeakDisconnectAction": "Nothing",
+          "PeakDisconnectTimeoutMinutes": 0,
+          "PeakExtendedDisconnectAction": "Nothing",
+          "PeakExtendedDisconnectTimeoutMinutes": 0,
+          "PeakLogOffAction": "Nothing",
+          "PeakLogOffTimeoutMinutes": 0,
+          "DisconnectPeakIdleSessionAfterSeconds": 0,
+          "DisconnectOffPeakIdleSessionAfterSeconds": 0,
+          "LogoffPeakDisconnectedSessionAfterSeconds": 0,
+          "LogoffOffPeakDisconnectedSessionAfterSeconds": 0,
+          "AutoscaleScaleDownActionDuringPeak": "Shutdown",
+          "AutoscaleScaleDownActionDuringOffPeak": "Shutdown",
+          "PrelaunchSettings": {
+            "Enabled": false,
+            "MaxAverageLoadThreshold": 0,
+            "MaxLoadPerMachineThreshold": 0,
+            "MaxTimeBeforeDisconnectMinutes": 15,
+            "MaxTimeBeforeTerminateMinutes": 120,
+            "IncludedUserFilterEnabled": false,
+            "IncludedUsers": []
+          },
+          "PowerTimeSchemes": [
+            {
+              "DaysOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday"
+              ],
+              "Name": "test-group1_Weekdays",
+              "DisplayName": "Weekdays",
+              "PeakHours": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "PeakTimeRanges": null,
+              "PoolSize": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "PoolSizeSchedule": null,
+              "PoolUsingPercentage": false,
+              "Id": "5"
+            },
+            {
+              "DaysOfWeek": [
+                "Saturday",
+                "Sunday"
+              ],
+              "Name": "test-group1_Weekend",
+              "DisplayName": "Weekend",
+              "PeakHours": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "PeakTimeRanges": null,
+              "PoolSize": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "PoolSizeSchedule": null,
+              "PoolUsingPercentage": false,
+              "Id": "6"
+            }
+          ],
+          "ProtocolPriority": null,
+          "RegisteredMachines": 0,
+          "SecureIcaRequired": false,
+          "SettlementPeriodBeforeAutoShutdownSeconds": 0,
+          "SettlementPeriodBeforeUseSeconds": 0,
+          "ShutdownDesktopsAfterUse": false,
+          "SimpleAccessPolicy": {
+            "AllowAnonymous": false,
+            "AllowHdxAccess": true,
+            "AllowMachineRestart": true,
+            "AllowRdpAccess": true,
+            "ConnectNotViaNetScalerGatewayAllowed": true,
+            "ConnectViaNetScalerGatewayAllowed": true,
+            "IncludedSmartAccessFilterEnabled": true,
+            "IncludedSmartAccessTags": [],
+            "IncludedUserFilterEnabled": true,
+            "IncludedUsers": [],
+            "ExcludedUserFilterEnabled": true,
+            "ExcludedUsers": []
+          },
+          "AdvancedAccessPolicy": [
+            {
+              "Id": "6",
+              "Uid": 6,
+              "Name": "test-group1_AG",
+              "AllowHdxAccess": true,
+              "AllowMachineRestart": true,
+              "AllowRdpAccess": true,
+              "AllowedConnection": "ViaAG",
+              "AllowedUsers": "Filtered",
+              "Description": null,
+              "Enabled": true,
+              "IsBuiltIn": true,
+              "IsBroken": false,
+              "ExcludedClientIPFilterEnabled": false,
+              "ExcludedClientIPs": [],
+              "ExcludedClientNameFilterEnabled": false,
+              "ExcludedClientNames": [],
+              "ExcludedSmartAccessFilterEnabled": false,
+              "ExcludedSmartAccessTags": [],
+              "ExcludedUserFilterEnabled": true,
+              "ExcludedUsers": [],
+              "IncludedClientIPFilterEnabled": false,
+              "IncludedClientIPs": [],
+              "IncludedClientNameFilterEnabled": false,
+              "IncludedClientNames": [],
+              "IncludedSmartAccessFilterEnabled": true,
+              "IncludedSmartAccessTags": [],
+              "IncludedSmartAccessFilterType": "MatchAny",
+              "IncludedUserFilterEnabled": true,
+              "AppProtectionKeyLoggingRequired": false,
+              "AppProtectionScreenCaptureRequired": false,
+              "IsContextualAppProtectionPolicy": false,
+              "HdxSslEnabled": false,
+              "IncludedUsers": []
+            },
+            {
+              "Id": "5",
+              "Uid": 5,
+              "Name": "test-group1_Direct",
+              "AllowHdxAccess": true,
+              "AllowMachineRestart": true,
+              "AllowRdpAccess": true,
+              "AllowedConnection": "NotViaAG",
+              "AllowedUsers": "Filtered",
+              "Description": null,
+              "Enabled": true,
+              "IsBuiltIn": true,
+              "IsBroken": false,
+              "ExcludedClientIPFilterEnabled": false,
+              "ExcludedClientIPs": [],
+              "ExcludedClientNameFilterEnabled": false,
+              "ExcludedClientNames": [],
+              "ExcludedSmartAccessFilterEnabled": false,
+              "ExcludedSmartAccessTags": [],
+              "ExcludedUserFilterEnabled": true,
+              "ExcludedUsers": [],
+              "IncludedClientIPFilterEnabled": false,
+              "IncludedClientIPs": [],
+              "IncludedClientNameFilterEnabled": false,
+              "IncludedClientNames": [],
+              "IncludedSmartAccessFilterEnabled": true,
+              "IncludedSmartAccessTags": [],
+              "IncludedSmartAccessFilterType": "MatchAny",
+              "IncludedUserFilterEnabled": true,
+              "AppProtectionKeyLoggingRequired": false,
+              "AppProtectionScreenCaptureRequired": false,
+              "IsContextualAppProtectionPolicy": false,
+              "HdxSslEnabled": false,
+              "IncludedUsers": []
+            }
+          ],
+          "StoreFrontServersForHostedReceiver": [],
+          "TimeZone": "UTC",
+          "TotalApplicationGroups": 0,
+          "TotalMachines": 1,
+          "TurnOnAddedMachines": false,
+          "UnassignedMachines": 1,
+          "UsedByGroupPolicy": false,
+          "VdaVersions": [
+            {
+              "Name": "Unknown",
+              "Value": 1
+            }
+          ],
+          "ZonePreferences": [],
+          "LimitSecondsToForceLogOffUserDuringPeak": 0,
+          "LimitSecondsToForceLogOffUserDuringOffPeak": 0,
+          "RestrictAutoscaleMinIdleUntaggedPercentDuringPeak": -1,
+          "RestrictAutoscaleMinIdleUntaggedPercentDuringOffPeak": -1,
+          "LogOffWarningMessage": null,
+          "LogOffWarningTitle": null,
+          "LoadBalanceType": "None",
+          "AutoscaleLogOffReminderEnabled": false,
+          "AutoscaleLogOffReminderIntervalSecondsOffPeak": 0,
+          "AutoscaleLogOffReminderIntervalSecondsPeak": 0,
+          "AutoscaleLogOffReminderMessage": null,
+          "AutoscaleLogOffReminderTitle": null,
+          "AutoscaleGroupPlugins": [],
+          "Id": "00000000-0000-0000-0000-000000000010",
+          "Uid": 3,
+          "UserManagement": "Studio",
+          "Delivering": "Unknown",
+          "DeliveryType": "DesktopsOnly",
+          "Description": null,
+          "DesktopsAvailable": 0,
+          "DesktopsDisconnected": 0,
+          "DesktopsFaulted": 0,
+          "DesktopsUnregistered": 1,
+          "Enabled": true,
+          "HasBeenPromoted": false,
+          "HasBeenPromotedFrom": "Unknown",
+          "InMaintenanceMode": false,
+          "IsBroken": false,
+          "IsRemotePC": true,
+          "MachineLogOnType": "ActiveDirectory",
+          "Metadata": [],
+          "MinimumFunctionalLevel": "L7_9",
+          "Name": "test-group1",
+          "FullName": "test-group1",
+          "PublishedName": null,
+          "PolicySetGuid": "00000000-0000-0000-0000-000000000000",
+          "ProductCode": null,
+          "LicenseModel": null,
+          "RequireUserHomeZone": false,
+          "Scopes": [
+            {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "Uid": null,
+              "Name": "All",
+              "Description": null,
+              "IsBuiltIn": true,
+              "IsAllScope": true,
+              "IsTenantScope": false,
+              "TenantId": null,
+              "TenantName": null
+            }
+          ],
+          "Tenants": [],
+          "Tags": null,
+          "SessionCount": 0,
+          "SessionSupport": "SingleSession",
+          "SharingKind": "Private",
+          "TotalApplications": 0,
+          "TotalDesktops": 1,
+          "ApplicationGroupCompatibility": "Unknown",
+          "ApplicationCompatibility": "Unknown",
+          "DesktopCompatibility": "Unknown",
+          "RequiredSleepCapability": "None",
+          "AdminFolder": {
+            "Id": "0",
+            "Uid": 0,
+            "Name": ""
+          },
+          "IsPowerManaged": false,
+          "AutoscalingEnabled": false,
+          "ReuseMachinesWithoutShutdownInOutage": false,
+          "TotalDesktopsOfSuspend": null
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '82900'
+      Connection:
+      - close
+      Content-Length:
+      - '9703'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+version: 1

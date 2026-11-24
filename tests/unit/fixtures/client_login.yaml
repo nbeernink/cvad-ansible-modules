@@ -1,0 +1,109 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/Tokens
+  response:
+    body:
+      string: |-
+        {
+          "Token": "MOCKED_BEARER_TOKEN",
+          "Principal": "unit-tester",
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "CustomerId": "CitrixOnPremises",
+          "ExpiresAt": "2026-11-21T21:18:03Z"
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '1000'
+      Connection:
+      - close
+      Content-Length:
+      - '201'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/Me
+  response:
+    body:
+      string: |-
+        {
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "DisplayName": "",
+          "ExpiryTime": "2026-11-21T21:18:03Z",
+          "RefreshExpirationTime": "2026-11-22T20:18:03Z",
+          "VerifiedEmail": null,
+          "IsCspCustomer": false,
+          "Customers": [
+            {
+              "Id": "CitrixOnPremises",
+              "Name": null,
+              "Sites": [
+                {
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "Name": "TESTSITE"
+                }
+              ]
+            }
+          ]
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '1100'
+      Connection:
+      - close
+      Content-Length:
+      - '441'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+version: 1

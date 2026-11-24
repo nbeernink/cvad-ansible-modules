@@ -31,3 +31,21 @@ jobs:
         with:
           ansible-core-version: ${{ matrix.ansible }}
           testing-type: sanity
+
+  units:
+    name: Units (Ⓐ${{ matrix.ansible }})
+    strategy:
+      matrix:
+        ansible:
+          - stable-2.16
+          - stable-2.18
+          - stable-2.19
+          - stable-2.20
+          - milestone
+    runs-on: ubuntu-latest
+    steps:
+      - name: Perform unit testing
+        uses: ansible-community/ansible-test-gh-action@release/v1
+        with:
+          ansible-core-version: ${{ matrix.ansible }}
+          testing-type: units

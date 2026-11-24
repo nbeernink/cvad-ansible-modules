@@ -1,0 +1,362 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/Tokens
+  response:
+    body:
+      string: |-
+        {
+          "Token": "MOCKED_BEARER_TOKEN",
+          "Principal": "unit-tester",
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "CustomerId": "CitrixOnPremises",
+          "ExpiresAt": "2026-11-21T21:36:34Z"
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '1000'
+      Connection:
+      - close
+      Content-Length:
+      - '201'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Connection:
+      - close
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/Me
+  response:
+    body:
+      string: |-
+        {
+          "UserId": "S-1-5-21-0000000000-0000000000-00000000-0000",
+          "DisplayName": "",
+          "ExpiryTime": "2026-11-21T21:36:34Z",
+          "RefreshExpirationTime": "2026-11-22T20:36:34Z",
+          "VerifiedEmail": null,
+          "IsCspCustomer": false,
+          "Customers": [
+            {
+              "Id": "CitrixOnPremises",
+              "Name": null,
+              "Sites": [
+                {
+                  "Id": "00000000-0000-0000-0000-000000000001",
+                  "Name": "TESTSITE"
+                }
+              ]
+            }
+          ]
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '1100'
+      Connection:
+      - close
+      Content-Length:
+      - '441'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"BasicSearchString": "test-catalog1"}'
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Length:
+      - '43'
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: POST
+    uri: https://ddc.example.org/cvad/manage/MachineCatalogs/$search?fields=Id
+  response:
+    body:
+      string: |-
+        {
+          "Items": [
+            {
+              "Id": "00000000-0000-0000-0000-000000000020"
+            }
+          ],
+          "TotalItems": 1
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '200'
+      Connection:
+      - close
+      Content-Length:
+      - '102'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: GET
+    uri: https://ddc.example.org/cvad/manage/MachineCatalogs/00000000-0000-0000-0000-000000000020/Machines
+  response:
+    body:
+      string: |-
+        {
+          "Items": [
+            {
+              "Uid": 5,
+              "AgentVersion": null,
+              "AllocationType": "Static",
+              "ApplicationsInUse": [],
+              "AssignedUsers": [],
+              "AssociatedUsers": [],
+              "AzureAdJoinedMode": "NotAadJoined",
+              "ContainerScopes": [],
+              "ControllerDnsName": null,
+              "DeliveryGroup": null,
+              "DeliveryType": null,
+              "Description": null,
+              "DesktopConditions": [],
+              "DnsName": "test-vm1.example.org",
+              "FunctionalLevel": null,
+              "Hosting": {
+                "HostedMachineId": null,
+                "HostedMachineName": null,
+                "HostingServerName": null,
+                "LastHostingUpdateTime": null,
+                "FormattedLastHostingUpdateTime": null,
+                "HypervisorConnection": null,
+                "ImageOutOfDate": false
+              },
+              "InMaintenanceMode": false,
+              "MaintenanceModeReason": "None",
+              "DrainingUntilShutdown": false,
+              "IPAddress": null,
+              "IsAssigned": false,
+              "MachineType": "Physical",
+              "LastConnectionFailure": null,
+              "LastConnectionTime": null,
+              "FormattedLastConnectionTime": null,
+              "LastConnectionUser": null,
+              "LastDeregistrationReason": null,
+              "LastDeregistrationTime": null,
+              "FormattedLastDeregistrationTime": null,
+              "LastErrorReason": null,
+              "LastErrorTime": null,
+              "FormattedLastErrorTime": null,
+              "LoadIndex": null,
+              "LoadIndexes": [],
+              "LoadIndexNames": [],
+              "MachineUnavailableReason": "None",
+              "OSType": null,
+              "OSVersion": null,
+              "PersistUserChanges": "OnLocal",
+              "PowerActionPending": false,
+              "PowerState": "Unmanaged",
+              "ProvisioningType": "Manual",
+              "PublishedApplications": [],
+              "PublishedName": null,
+              "RegistrationState": "Unregistered",
+              "ScheduledReboot": "None",
+              "SessionClientAddress": null,
+              "SessionClientName": null,
+              "SessionClientVersion": null,
+              "SessionConnectedViaHostName": null,
+              "SessionConnectedViaIP": null,
+              "SessionCount": 0,
+              "SessionLaunchedViaHostName": null,
+              "SessionLaunchedViaIP": null,
+              "SessionProtocol": null,
+              "SessionSecureIcaActive": null,
+              "SessionSmartAccessTags": [],
+              "SessionStartTime": null,
+              "FormattedSessionStartTime": null,
+              "SessionState": null,
+              "SessionStateChangeTime": null,
+              "FormattedSessionStateChangeTime": null,
+              "SessionSupport": "SingleSession",
+              "SessionUserName": null,
+              "Sid": "S-1-5-21-0000000000-0000000000-00000000-0000",
+              "SummaryState": "Unregistered",
+              "WillShutdownAfterUse": false,
+              "WindowsConnectionSetting": "LogonEnabled",
+              "WindowsActivationStatus": null,
+              "WindowsActivationStatusErrorCode": null,
+              "WindowsActivationStatusVirtualMachineError": null,
+              "WindowsActivationTypeProvisionedVirtualMachine": null,
+              "Zone": {
+                "Id": "00000000-0000-0000-0000-000000000040",
+                "Uid": null,
+                "Name": "Primary"
+              },
+              "SupportedPowerActions": [],
+              "FaultState": "None",
+              "ContainerMetadata": null,
+              "Tags": [],
+              "UpgradeType": null,
+              "UpgradeState": null,
+              "MachineConfigurationOutOfSync": null,
+              "UpgradeDetail": null,
+              "Metadata": [],
+              "Id": "00000000-0000-0000-0000-000000000001",
+              "MachineCatalog": {
+                "Id": "00000000-0000-0000-0000-000000000020",
+                "Uid": 13,
+                "Name": "test-catalog1"
+              },
+              "Name": "EXAMPLE\\TEST-VM1"
+            }
+          ]
+        }
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '9500'
+      Connection:
+      - close
+      Content-Length:
+      - '3455'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Citrix-CustomerId:
+      - CitrixOnPremises
+      Citrix-InstanceId:
+      - 00000000-0000-0000-0000-000000000001
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+      Host:
+      - ddc.example.org
+      User-Agent:
+      - Python-urllib/3.12
+      authorization:
+      - CWSAuth Bearer=MOCKED_BEARER_TOKEN
+    method: DELETE
+    uri: https://ddc.example.org/cvad/manage/MachineCatalogs/00000000-0000-0000-0000-000000000020/Machines/00000000-0000-0000-0000-000000000001
+  response:
+    body:
+      string: ''
+    headers:
+      Cache-Control:
+      - no-store, must-revalidate, no-cache
+      Citrix-API-Cost:
+      - '21000'
+      Connection:
+      - close
+      Content-Length:
+      - '0'
+      Content-Security-Policy:
+      - frame-ancestors 'none'
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=2592000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 204
+      message: No Content
+version: 1

@@ -21,7 +21,10 @@ dependencies: {}
 build_ignore:
  - .gitignore
  - .github
+ - .tox
+ - .venv
  - changelogs/.plugin-cache.yaml
  - changelogs/fragments
+ - collections
  - playbooks
  - tests
