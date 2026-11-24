@@ -169,8 +169,13 @@ class CVADClient():
                 # A successful response resets the rate-limit retry counter
                 rate_limit_retries = 0
 
-                if response.length != 0:
-                    json_resp = json.loads(response.read())
+                if getattr(response, 'status', None) == 204:
+                    break
+
+                body_content = response.read()
+
+                if body_content:
+                    json_resp = json.loads(body_content)
 
                     if 'Items' in json_resp.keys():
 

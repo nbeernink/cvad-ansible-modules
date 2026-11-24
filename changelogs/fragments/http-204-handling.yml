@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - Improve request handling by not trying to parse empty body on HTTP 204 response
