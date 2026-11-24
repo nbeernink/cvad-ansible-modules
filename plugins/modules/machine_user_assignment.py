@@ -142,7 +142,7 @@ def run_module():
         machine_id = cvad_client.find_machine_id(machine_name)
 
         # Get existing details
-        machine_details = cvad_client.get(f"/Machines/{machine_id}")
+        machine_details = cvad_client.get(f"Machines/{machine_id}")
         assigned_user_objs = machine_details.get('AssignedUsers') or []
 
         if state == 'present':
@@ -166,7 +166,7 @@ def run_module():
 
                 if not module.check_mode:
                     cvad_client.patch(
-                        f"/Machines/{machine_id}",
+                        f"Machines/{machine_id}",
                         data={"AssignedUsers": updated_assigned_users}
                     )
                     msg = f"Assigned user(s) ({', '.join(users_to_add)}) to machine '{machine_name}'"
@@ -180,7 +180,7 @@ def run_module():
                     changed = True
                     if not module.check_mode:
                         cvad_client.patch(
-                            f"/Machines/{machine_id}",
+                            f"Machines/{machine_id}",
                             data={"AssignedUsers": []}
                         )
                         msg = f"Removed all user assignments from machine '{machine_name}'"
@@ -215,7 +215,7 @@ def run_module():
 
                     if not module.check_mode:
                         cvad_client.patch(
-                            f"/Machines/{machine_id}",
+                            f"Machines/{machine_id}",
                             data={"AssignedUsers": updated_assigned_users}
                         )
                         msg = f"Removed assignment for user(s) ({', '.join(users_to_remove)}) from machine '{machine_name}'"

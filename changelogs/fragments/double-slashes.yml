@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - Prevent double slashes in request handling

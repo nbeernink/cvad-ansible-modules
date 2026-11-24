@@ -109,11 +109,11 @@ def run_module():
 
         if group_name:
             delivery_group_info = cvad_client.get(
-                f"/DeliveryGroups/{group_id}?fields={return_fields}"
+                f"DeliveryGroups/{group_id}?fields={return_fields}"
             )
         else:
             delivery_group_info = cvad_client.get(
-                f"/DeliveryGroups?fields={return_fields}"
+                f"DeliveryGroups?fields={return_fields}"
             )
 
         module.exit_json(changed=False, delivery_group_info=delivery_group_info)

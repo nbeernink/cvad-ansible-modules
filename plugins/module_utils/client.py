@@ -268,7 +268,7 @@ class CVADClient():
     def find_delivery_group_by_id(self, group_name) -> str:
         """Search delivery group and return the id"""
         return self._find_entity_field_by_name(
-            endpoint="/DeliveryGroups",
+            endpoint="DeliveryGroups",
             name=group_name,
             fields="Id"
         )
@@ -276,7 +276,7 @@ class CVADClient():
     def find_machine_catalog_by_id(self, catalog_name) -> str:
         """Search delivery group and return the id"""
         return self._find_entity_field_by_name(
-            endpoint="/MachineCatalogs",
+            endpoint="MachineCatalogs",
             name=catalog_name,
             fields="Id"
         )
@@ -284,7 +284,7 @@ class CVADClient():
     def find_machine_id(self, machine_name) -> str:
         """Search machine and return its ID"""
         return self._find_entity_field_by_name(
-            endpoint="/Machines",
+            endpoint="Machines",
             name=machine_name,
             fields="Id"
         )
@@ -292,7 +292,7 @@ class CVADClient():
     def find_machine_catalog_id_for_machine(self, machine_name) -> str:
         """Search machine and return the machine catalog ID"""
         results = self._find_entity_field_by_name(
-            endpoint="/Machines",
+            endpoint="Machines",
             name=machine_name,
             fields="MachineCatalog"
         )

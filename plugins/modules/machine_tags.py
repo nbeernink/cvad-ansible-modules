@@ -155,7 +155,7 @@ def run_module():
 
         machine_id = cvad_client.find_machine_id(machine_name)
 
-        all_site_tags = cvad_client.get('/Tags?fields=Name,Id')
+        all_site_tags = cvad_client.get('Tags?fields=Name,Id')
         site_tags_by_name = {tag['Name']: tag for tag in all_site_tags}
 
         # Match requested tags by name with tags available in the site (case-sensitive)
@@ -166,7 +166,7 @@ def run_module():
                 raise AssertionError(f"Tag '{tag_name}' does not exist on the CVAD site")
             desired_tags.append(tag)
 
-        current_tags = cvad_client.get(f"/Machines/{machine_id}/Tags")
+        current_tags = cvad_client.get(f"Machines/{machine_id}/Tags")
         current_tag_ids = {t['Id'] for t in current_tags}
         desired_tag_ids = {t['Id'] for t in desired_tags}
 
@@ -200,9 +200,9 @@ def run_module():
 
         if not module.check_mode:
             for tag in tags_to_add:
-                cvad_client.post(f"/Machines/{machine_id}/Tags/{tag['Id']}")
+                cvad_client.post(f"Machines/{machine_id}/Tags/{tag['Id']}")
             for tag in tags_to_remove:
-                cvad_client.delete(f"/Machines/{machine_id}/Tags/{tag['Id']}")
+                cvad_client.delete(f"Machines/{machine_id}/Tags/{tag['Id']}")
 
         def format_action(action, tag_list):
             tag_names = [f"'{t['Name']}'" for t in tag_list]

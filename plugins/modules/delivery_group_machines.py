@@ -122,7 +122,7 @@ def run_module():
         machine_catalog_id = cvad_client.find_machine_catalog_id_for_machine(machine_name)
 
         # Get list of machines in delivery group
-        machines = cvad_client.get(f"/DeliveryGroups/{delivery_group_id}/Machines")
+        machines = cvad_client.get(f"DeliveryGroups/{delivery_group_id}/Machines")
 
         # Check if machine is already in catalog
         machine_in_catalog = any(
@@ -132,7 +132,7 @@ def run_module():
         if state == 'absent' and machine_in_catalog:
             if not module.check_mode:
                 cvad_client.delete(
-                    f"/DeliveryGroups/{delivery_group_id}/Machines/{machine_id}"
+                    f"DeliveryGroups/{delivery_group_id}/Machines/{machine_id}"
                 )
                 msg = f"Removed {machine_name} from {group_name}"
                 changed = True
@@ -143,7 +143,7 @@ def run_module():
         elif state == 'present' and not machine_in_catalog:
             if not module.check_mode:
                 cvad_client.post(
-                    f"/DeliveryGroups/{delivery_group_id}/Machines",
+                    f"DeliveryGroups/{delivery_group_id}/Machines",
                     data={
                         "MachineCatalog": machine_catalog_id,
                         "AssignMachinesToUsers": [

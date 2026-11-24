@@ -301,11 +301,11 @@ class InventoryModule(BaseInventoryPlugin, Cacheable, Constructable):
 
             if machine_filter is not None:
                 all_machines = cvad_client.post(
-                    "/Machines/$search",
+                    "Machines/$search",
                     machine_filter
                 )
             else:
-                all_machines = cvad_client.get('/Machines')
+                all_machines = cvad_client.get('Machines')
 
             maintenance_group = f"{group_prefix}in_maintenancemode"
             self.inventory.add_group(maintenance_group)

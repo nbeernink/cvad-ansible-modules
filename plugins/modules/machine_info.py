@@ -85,7 +85,7 @@ def run_module():
 
         machine_id = cvad_client.find_machine_id(machine_name)
 
-        machine_info = cvad_client.get(f"/Machines/{machine_id}")
+        machine_info = cvad_client.get(f"Machines/{machine_id}")
 
         module.exit_json(changed=False, machine_info=machine_info)
 
