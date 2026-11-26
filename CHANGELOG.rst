@@ -4,15 +4,24 @@ nbeernink.cvad Release Notes
 
 .. contents:: Topics
 
+v0.0.14
+=======
+
+Bugfixes
+--------
+
+- Fix `delivery_group_machines`-module failing to look up machines in a delivery group with a space in the name
+  https://github.com/nbeernink/cvad-ansible-modules/issues/21
+
 v0.0.13
 =======
 
 Minor Changes
 -------------
 
-- Add `machine_filter` inventory option to the inventory plugin
-- Add `keyed_groups` option to the inventory plugin
-- Add `want_tags` inventory option which groups machines by tags
+- Add `keyed_groups` option to inventory plugin
+- Add `machine_filter` option to the inventory plugin
+- Add `want_tags` option which groups machines by tags
 - All hosts in the inventory will be lowercased
 - Inventory errors will be raised by AnsibleParserError
 

@@ -29,8 +29,8 @@ releases:
   0.0.13:
     changes:
       minor_changes:
-        - Add `machine_filter` option to the inventory plugin
         - Add `keyed_groups` option to inventory plugin
+        - Add `machine_filter` option to the inventory plugin
         - Add `want_tags` option which groups machines by tags
         - All hosts in the inventory will be lowercased
         - Inventory errors will be raised by AnsibleParserError
@@ -40,6 +40,16 @@ releases:
       - add_want_tags.yml
       - misc_fixes.yml
     release_date: '2026-11-12'
+  0.0.14:
+    changes:
+      bugfixes:
+        - 'Fix `delivery_group_machines`-module failing to look up machines in a delivery
+          group with a space in the name
+
+          https://github.com/nbeernink/cvad-ansible-modules/issues/21'
+    fragments:
+      - issue_21.yml
+    release_date: '2026-11-26'
   0.0.4:
     changes:
       bugfixes:
